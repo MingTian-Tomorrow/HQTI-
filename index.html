@@ -1505,23 +1505,31 @@
         levels[dim] = sumToLevel(score, maxScore);
       });
 
-      // 计算用户向量和每个角色的相似度
-      const userVector = dimensionOrder.map(dim => levelNum(levels[dim]));
+      // 计算用户向量和每个角色的相似度（使用原始分数）
+      const userVector = dimensionOrder.map(dim => rawScores[dim]);
       const ranked = NORMAL_TYPES.map(type => {
-        const vector = parsePattern(type.pattern).map(levelNum);
+        // 将角色模式转换为分数向量
+        const pattern = parsePattern(type.pattern);
+        const vector = dimensionOrder.map((dim, index) => {
+          const level = pattern[index];
+          const maxScore = 12; // 每个维度3个问题，每个问题4分
+          if (level === 'H') return maxScore; // 高等级对应满分
+          if (level === 'M') return maxScore * 0.66; // 中等级对应2/3分数
+          return maxScore * 0.33; // 低等级对应1/3分数
+        });
+        
         let distance = 0;
-        let exact = 0;
+        let totalPossibleDistance = 0;
         for (let i = 0; i < vector.length; i++) {
           const diff = Math.abs(userVector[i] - vector[i]);
           distance += diff;
-          if (diff === 0) exact += 1;
+          totalPossibleDistance += 12; // 每个维度最大可能差异为12
         }
-        const similarity = Math.max(0, Math.round((1 - distance / 30) * 100));
-        return { ...type, ...TYPE_LIBRARY[type.code], distance, exact, similarity };
+        const similarity = Math.max(0, Math.round((1 - distance / totalPossibleDistance) * 100));
+        return { ...type, ...TYPE_LIBRARY[type.code], distance, similarity };
       }).sort((a, b) => {
-        if (a.distance !== b.distance) return a.distance - b.distance;
-        if (b.exact !== a.exact) return b.exact - a.exact;
-        return b.similarity - a.similarity;
+        if (a.similarity !== b.similarity) return b.similarity - a.similarity;
+        return a.distance - b.distance;
       });
 
       const bestNormal = ranked[0];
@@ -1529,7 +1537,7 @@
 
       let finalType;
       let modeKicker = '你的排球少年人格';
-      let badge = `匹配度 ${bestNormal.similarity}% · 精准命中 ${bestNormal.exact}/10 维`;
+      let badge = `匹配度 ${bestNormal.similarity}%`;
       let sub = '维度命中度较高，你非常像这位角色！';
       let special = false;
       let secondaryType = null;
