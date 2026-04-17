@@ -1262,30 +1262,30 @@
   "KIYOMIZU": "./image/KIYOMIZU.webp"
 };
 
-    // 正常人格类型：定义各角色的维度模式
+    // 正常人格类型：定义各角色的分数向量
     const NORMAL_TYPES = [
-  { code: "HINATA", pattern: "HMLHHHHLLL" },
-  { code: "KAGEYAMA", pattern: "HHHHHHHHHH" },
-  { code: "OIKAWA", pattern: "MHHHHMHHHH" },
-  { code: "SUWAMURA", pattern: "MMHHMLMMHH" },
-  { code: "TSUKISHIMA", pattern: "MLHLHLMMMM" },
-  { code: "TANAKA", pattern: "HMHLMHHMMM" },
-  { code: "NISHINOYA", pattern: "LMMHHHHMHM" },
-  { code: "KOSHI", pattern: "MLHLHLMMMH" },
-  { code: "KUROO", pattern: "HHHMHMHHHH" },
-  { code: "IWAIZUMI", pattern: "HMHMHMHMHM" },
-  { code: "USHIJIMA", pattern: "HHHMHHHHHH" },
-  { code: "TENDO", pattern: "MLMHHHHMMM" },
-  { code: "HOSHI", pattern: "HMMHHHHMMM" },
-  { code: "MIYAATSU", pattern: "HMHMHLHHHH" },
-  { code: "MIYASATSU", pattern: "HHMHHHHHHH" },
-  { code: "BOKUTO", pattern: "HHMHHHHMMM" },
-  { code: "AKAASHI", pattern: "MHHMHLHHHH" },
-  { code: "KITA", pattern: "MHHMMLMMMM" },
-  { code: "DAICHI", pattern: "MHHMMLHMMM" },
-  { code: "YAMAGUCHI", pattern: "MLMMLMMMMM" },
-  { code: "AZUMA", pattern: "HMMMMMMMMM" },
-  { code: "KIYOMIZU", pattern: "LMHHMLMMMM" }
+  { code: "HINATA", vector: [12, 6, 6, 12, 8, 10, 12, 6, 8, 4] },
+  { code: "KAGEYAMA", vector: [10, 10, 12, 6, 12, 8, 12, 10, 10, 12] },
+  { code: "OIKAWA", vector: [10, 12, 10, 10, 10, 8, 12, 12, 10, 12] },
+  { code: "SUWAMURA", vector: [6, 12, 10, 12, 8, 4, 10, 8, 12, 10] },
+  { code: "TSUKISHIMA", vector: [6, 4, 12, 4, 10, 4, 8, 8, 8, 6] },
+  { code: "TANAKA", vector: [10, 6, 6, 10, 6, 12, 10, 8, 8, 6] },
+  { code: "NISHINOYA", vector: [4, 6, 6, 12, 8, 10, 12, 6, 12, 8] },
+  { code: "KOSHI", vector: [4, 4, 12, 6, 12, 4, 8, 10, 10, 10] },
+  { code: "KUROO", vector: [10, 12, 12, 8, 10, 8, 10, 10, 10, 10] },
+  { code: "IWAIZUMI", vector: [10, 6, 8, 8, 8, 8, 8, 8, 8, 8] },
+  { code: "USHIJIMA", vector: [12, 10, 10, 4, 12, 10, 12, 10, 10, 10] },
+  { code: "TENDO", vector: [6, 4, 8, 10, 10, 10, 10, 8, 8, 6] },
+  { code: "HOSHI", vector: [12, 6, 8, 12, 10, 10, 12, 8, 8, 6] },
+  { code: "MIYAATSU", vector: [10, 6, 12, 4, 10, 4, 10, 12, 12, 12] },
+  { code: "MIYASATSU", vector: [10, 12, 12, 8, 12, 10, 12, 12, 10, 12] },
+  { code: "BOKUTO", vector: [12, 8, 6, 12, 10, 10, 12, 8, 8, 6] },
+  { code: "AKAASHI", vector: [6, 8, 12, 8, 10, 4, 10, 10, 10, 12] },
+  { code: "KITA", vector: [6, 8, 12, 8, 6, 4, 10, 8, 8, 8] },
+  { code: "DAICHI", vector: [8, 12, 10, 8, 6, 6, 10, 8, 10, 6] },
+  { code: "YAMAGUCHI", vector: [6, 4, 8, 6, 6, 4, 6, 8, 6, 6] },
+  { code: "AZUMA", vector: [10, 4, 8, 6, 8, 8, 8, 8, 8, 8] },
+  { code: "KIYOMIZU", vector: [2, 6, 10, 12, 6, 2, 10, 2, 2, 2] }
 ];
     // 维度解释：为每个维度的不同水平提供解释
     const DIM_EXPLANATIONS = {
@@ -1508,15 +1508,7 @@
       // 计算用户向量和每个角色的相似度（使用原始分数）
       const userVector = dimensionOrder.map(dim => rawScores[dim]);
       const ranked = NORMAL_TYPES.map(type => {
-        // 将角色模式转换为分数向量
-        const pattern = parsePattern(type.pattern);
-        const vector = dimensionOrder.map((dim, index) => {
-          const level = pattern[index];
-          const maxScore = 12; // 每个维度3个问题，每个问题4分
-          if (level === 'H') return maxScore; // 高等级对应满分
-          if (level === 'M') return maxScore * 0.66; // 中等级对应2/3分数
-          return maxScore * 0.33; // 低等级对应1/3分数
-        });
+        const vector = type.vector;
         
         let distance = 0;
         let totalPossibleDistance = 0;
