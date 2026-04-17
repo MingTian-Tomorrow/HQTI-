@@ -705,7 +705,7 @@
         <div id="questionList" class="question-list"></div>
 
         <div class="actions-bottom">
-          <div class="hint" id="testHint">全选完才会放行。世界已经够乱了，起码把题做完整。</div>
+          <div class="hint" id="testHint">全选完才会放行。</div>
           <div style="display:flex; gap:12px; flex-wrap:wrap;">
             <button id="backIntroBtn" class="btn-secondary">返回首页</button>
             <button id="submitBtn" class="btn-primary" disabled>提交并查看结果</button>
@@ -744,7 +744,7 @@
 
           <div class="note-box">
             <h3>友情提示</h3>
-            <p id="funNote">本测试仅供娱乐，别拿它当诊断、面试、相亲、分手、招魂、算命或人生判决书。</p>
+            <p id="funNote">本测试仅供娱乐，别拿它当成你球场的剧本。</p>
           </div>
 
         </div>
@@ -762,340 +762,380 @@
 
   
   <script>
-    // 维度元数据：定义测试的15个维度及其所属模型
+    // 维度元数据：定义测试的10个维度及其所属模型
     const dimensionMeta = {
-      S1: { name: 'S1 自尊自信', model: '自我模型' },
-      S2: { name: 'S2 自我清晰度', model: '自我模型' },
-      S3: { name: 'S3 核心价值', model: '自我模型' },
-      E1: { name: 'E1 依恋安全感', model: '情感模型' },
-      E2: { name: 'E2 情感投入度', model: '情感模型' },
-      E3: { name: 'E3 边界与依赖', model: '情感模型' },
-      A1: { name: 'A1 世界观倾向', model: '态度模型' },
-      A2: { name: 'A2 规则与灵活度', model: '态度模型' },
-      A3: { name: 'A3 人生意义感', model: '态度模型' },
-      Ac1: { name: 'Ac1 动机导向', model: '行动驱力模型' },
-      Ac2: { name: 'Ac2 决策风格', model: '行动驱力模型' },
-      Ac3: { name: 'Ac3 执行模式', model: '行动驱力模型' },
-      So1: { name: 'So1 社交主动性', model: '社交模型' },
-      So2: { name: 'So2 人际边界感', model: '社交模型' },
-      So3: { name: 'So3 表达与真实度', model: '社交模型' }
+      A: { name: 'A 热血', model: '排球特质模型' },
+      B: { name: 'B 进攻', model: '排球特质模型' },
+      C: { name: 'C 领导', model: '排球特质模型' },
+      D: { name: 'D 智慧', model: '排球特质模型' },
+      E: { name: 'E 理性', model: '排球特质模型' },
+      F: { name: 'F 阳光', model: '排球特质模型' },
+      G: { name: 'G 坚韧', model: '排球特质模型' },
+      H: { name: 'H 存在感', model: '排球特质模型' },
+      I: { name: 'I 温柔', model: '排球特质模型' },
+      J: { name: 'J 自信', model: '排球特质模型' }
     };
     const questions = [
       // 排球相关问题（25个）
       {
-        id: 'q1', dim: 'S1',
-        text: '在排球比赛中，即使面对强大的对手，我也会充满斗志',
+        id: 'q1', dim: 'A',
+        text: '当队伍连续4次未得分，大家情绪低落时，我会大吼一声："都垂头丧气的干什么！比赛还没结束"',
         options: [
           { label: '完全不认同', value: 1 },
-          { label: '有点认同', value: 2 },
-          { label: '完全认同', value: 3 }
+          { label: '有点不认同', value: 2 },
+          { label: '有点认同', value: 3 },
+          { label: '完全认同', value: 4 }
         ]
       },
       {
-        id: 'q2', dim: 'S1',
-        text: '我认为自己在排球场上有足够的自信',
+        id: 'q2', dim: 'A',
+        text: '即使训练到筋疲力尽，我也会坚持完成最后一组扣球练习',
         options: [
           { label: '完全不认同', value: 1 },
-          { label: '有点认同', value: 2 },
-          { label: '完全认同', value: 3 }
+          { label: '有点不认同', value: 2 },
+          { label: '有点认同', value: 3 },
+          { label: '完全认同', value: 4 }
+        ]
+      },
+      // 生活作风态度相关问题（1）
+      {
+        id: 'q3', dim: 'A',
+        text: '面对学习中的难题，我会充满热情地查阅资料，直到解决为止',
+        options: [
+          { label: '完全不认同', value: 1 },
+          { label: '有点不认同', value: 2 },
+          { label: '有点认同', value: 3 },
+          { label: '完全认同', value: 4 }
         ]
       },
       {
-        id: 'q3', dim: 'S2',
-        text: '我清楚自己在排球场上的优势和劣势',
+        id: 'q4', dim: 'B',
+        text: '面对对方高大的拦网，我会毫不犹豫地直接突破它，而不是尝试斜线扣球',
         options: [
           { label: '完全不认同', value: 1 },
-          { label: '有点认同', value: 2 },
-          { label: '完全认同', value: 3 }
+          { label: '有点不认同', value: 2 },
+          { label: '有点认同', value: 3 },
+          { label: '完全认同', value: 4 }
         ]
       },
       {
-        id: 'q4', dim: 'S2',
-        text: '我有明确的排球目标，比如成为球队核心',
+        id: 'q5', dim: 'B',
+        text: '当二传传出一个不太理想的球时，我会尽力调整姿势完成进攻',
         options: [
           { label: '完全不认同', value: 1 },
-          { label: '有点认同', value: 2 },
-          { label: '完全认同', value: 3 }
+          { label: '有点不认同', value: 2 },
+          { label: '有点认同', value: 3 },
+          { label: '完全认同', value: 4 }
+        ]
+      },
+      // 生活作风态度相关问题（2）
+      {
+        id: 'q6', dim: 'B',
+        text: '面对生活中的挑战，我会主动出击，寻找解决办法',
+        options: [
+          { label: '完全不认同', value: 1 },
+          { label: '有点不认同', value: 2 },
+          { label: '有点认同', value: 3 },
+          { label: '完全认同', value: 4 }
         ]
       },
       {
-        id: 'q5', dim: 'S3',
-        text: '我会为了提高排球技术而不断努力训练',
+        id: 'q7', dim: 'C',
+        text: '比赛暂停时，我会主动召集队友，分析对方弱点并制定战术',
         options: [
           { label: '完全不认同', value: 1 },
-          { label: '有点认同', value: 2 },
-          { label: '完全认同', value: 3 }
+          { label: '有点不认同', value: 2 },
+          { label: '有点认同', value: 3 },
+          { label: '完全认同', value: 4 }
         ]
       },
       {
-        id: 'q6', dim: 'S3',
-        text: '即使在排球比赛中失误，我也不会轻易气馁',
+        id: 'q8', dim: 'C',
+        text: '当队友因为失误而自责时，我会拍拍他的肩膀说："没关系，下一球我们一起赢回来"，而不是等他自己调节好情绪',
         options: [
           { label: '完全不认同', value: 1 },
-          { label: '有点认同', value: 2 },
-          { label: '完全认同', value: 3 }
+          { label: '有点不认同', value: 2 },
+          { label: '有点认同', value: 3 },
+          { label: '完全认同', value: 4 }
+        ]
+      },
+      // 生活作风态度相关问题（3）
+      {
+        id: 'q9', dim: 'C',
+        text: '学校组织活动时，我会主动承担组织工作，协调大家的分工',
+        options: [
+          { label: '完全不认同', value: 1 },
+          { label: '有点不认同', value: 2 },
+          { label: '有点认同', value: 3 },
+          { label: '完全认同', value: 4 }
         ]
       },
       {
-        id: 'q7', dim: 'E1',
-        text: '我信任队友，相信他们能完成自己的任务',
+        id: 'q10', dim: 'D',
+        text: '观察对方拦网手的移动习惯后，我会调整进攻路线避开他的防守',
         options: [
           { label: '完全不认同', value: 1 },
-          { label: '有点认同', value: 2 },
-          { label: '完全认同', value: 3 }
+          { label: '有点不认同', value: 2 },
+          { label: '有点认同', value: 3 },
+          { label: '完全认同', value: 4 }
         ]
       },
       {
-        id: 'q8', dim: 'E1',
-        text: '在排球比赛中，我会主动与队友沟通',
+        id: 'q11', dim: 'D',
+        text: '观看国家队比赛时，我会记录他们的战术配合并尝试在训练中应用',
         options: [
           { label: '完全不认同', value: 1 },
-          { label: '有点认同', value: 2 },
-          { label: '完全认同', value: 3 }
+          { label: '有点不认同', value: 2 },
+          { label: '有点认同', value: 3 },
+          { label: '完全认同', value: 4 }
+        ]
+      },
+      // 生活作风态度相关问题（4）
+      {
+        id: 'q12', dim: 'D',
+        text: '当遇到问题时，我会分析各种可能性，找到最有效的解决方案',
+        options: [
+          { label: '完全不认同', value: 1 },
+          { label: '有点不认同', value: 2 },
+          { label: '有点认同', value: 3 },
+          { label: '完全认同', value: 4 }
         ]
       },
       {
-        id: 'q9', dim: 'E2',
-        text: '我会为了球队的胜利而牺牲个人表现',
+        id: 'q13', dim: 'E',
+        text: '当裁判做出不利于我方的判罚时，我会理性接受并专注于下一个球',
         options: [
           { label: '完全不认同', value: 1 },
-          { label: '有点认同', value: 2 },
-          { label: '完全认同', value: 3 }
+          { label: '有点不认同', value: 2 },
+          { label: '有点认同', value: 3 },
+          { label: '完全认同', value: 4 }
         ]
       },
       {
-        id: 'q10', dim: 'E2',
-        text: '我会关心队友的状态，给予他们鼓励',
+        id: 'q14', dim: 'E',
+        text: '比赛结束后，无论输赢，我都会和队友一起分析比赛中的问题',
         options: [
           { label: '完全不认同', value: 1 },
-          { label: '有点认同', value: 2 },
-          { label: '完全认同', value: 3 }
+          { label: '有点不认同', value: 2 },
+          { label: '有点认同', value: 3 },
+          { label: '完全认同', value: 4 }
+        ]
+      },
+      // 生活作风态度相关问题（5）
+      {
+        id: 'q15', dim: 'E',
+        text: '考试前紧张时，我能理性分析自己的复习情况，有条理地准备',
+        options: [
+          { label: '完全不认同', value: 1 },
+          { label: '有点不认同', value: 2 },
+          { label: '有点认同', value: 3 },
+          { label: '完全认同', value: 4 }
         ]
       },
       {
-        id: 'q11', dim: 'E3',
-        text: '我在排球场上需要一定的个人空间，不喜欢被过度干涉',
+        id: 'q16', dim: 'F',
+        text: '训练前我会主动和队友打招呼，讲笑话活跃气氛',
         options: [
           { label: '完全不认同', value: 1 },
-          { label: '有点认同', value: 2 },
-          { label: '完全认同', value: 3 }
+          { label: '有点不认同', value: 2 },
+          { label: '有点认同', value: 3 },
+          { label: '完全认同', value: 4 }
         ]
       },
       {
-        id: 'q12', dim: 'E3',
-        text: '我会与队友保持适当的距离，避免过于亲密影响比赛',
+        id: 'q17', dim: 'F',
+        text: '即使队伍大比分落后，我也会鼓励队友："我们还有机会，不要放弃！"',
         options: [
           { label: '完全不认同', value: 1 },
-          { label: '有点认同', value: 2 },
-          { label: '完全认同', value: 3 }
+          { label: '有点不认同', value: 2 },
+          { label: '有点认同', value: 3 },
+          { label: '完全认同', value: 4 }
+        ]
+      },
+      // 生活作风态度相关问题（6）
+      {
+        id: 'q18', dim: 'F',
+        text: '和朋友相处时，我会主动关心他们的近况，分享快乐时光',
+        options: [
+          { label: '完全不认同', value: 1 },
+          { label: '有点不认同', value: 2 },
+          { label: '有点认同', value: 3 },
+          { label: '完全认同', value: 4 }
         ]
       },
       {
-        id: 'q13', dim: 'A1',
-        text: '我认为排球比赛中，团队合作比个人英雄主义更重要',
+        id: 'q19', dim: 'G',
+        text: '即使连续练习发球失败，我也会坚持直到发出好球为止',
         options: [
           { label: '完全不认同', value: 1 },
-          { label: '有点认同', value: 2 },
-          { label: '完全认同', value: 3 }
+          { label: '有点不认同', value: 2 },
+          { label: '有点认同', value: 3 },
+          { label: '完全认同', value: 4 }
         ]
       },
       {
-        id: 'q14', dim: 'A1',
-        text: '我对排球运动充满热情，认为它是一项有意义的活动',
+        id: 'q20', dim: 'G',
+        text: '比赛中被对方拦死几次后，我会调整心态，继续尝试进攻',
         options: [
           { label: '完全不认同', value: 1 },
-          { label: '有点认同', value: 2 },
-          { label: '完全认同', value: 3 }
+          { label: '有点不认同', value: 2 },
+          { label: '有点认同', value: 3 },
+          { label: '完全认同', value: 4 }
+        ]
+      },
+      // 生活作风态度相关问题（7）
+      {
+        id: 'q21', dim: 'G',
+        text: '即使排球技术暂时落后，我也会坚持努力，相信自己能赶上队友，而不是得过且过，反正只是社团活动',
+        options: [
+          { label: '完全不认同', value: 1 },
+          { label: '有点不认同', value: 2 },
+          { label: '有点认同', value: 3 },
+          { label: '完全认同', value: 4 }
         ]
       },
       {
-        id: 'q15', dim: 'A2',
-        text: '我会严格遵守排球规则，不尝试钻规则的空子',
+        id: 'q22', dim: 'H',
+        text: '比赛中我希望成为球队的得分核心，被观众和队友关注',
         options: [
           { label: '完全不认同', value: 1 },
-          { label: '有点认同', value: 2 },
-          { label: '完全认同', value: 3 }
+          { label: '有点不认同', value: 2 },
+          { label: '有点认同', value: 3 },
+          { label: '完全认同', value: 4 }
         ]
       },
       {
-        id: 'q16', dim: 'A2',
-        text: '在排球比赛中，我喜欢按照既定战术执行，不随意发挥',
+        id: 'q23', dim: 'H',
+        text: '当机会来临时，我会主动要求球权，展示自己的进攻能力',
         options: [
           { label: '完全不认同', value: 1 },
-          { label: '有点认同', value: 2 },
-          { label: '完全认同', value: 3 }
+          { label: '有点不认同', value: 2 },
+          { label: '有点认同', value: 3 },
+          { label: '完全认同', value: 4 }
+        ]
+      },
+      // 生活作风态度相关问题（8）
+      {
+        id: 'q24', dim: 'H',
+        text: '在团队中，我希望自己的贡献能被他人认可和重视',
+        options: [
+          { label: '完全不认同', value: 1 },
+          { label: '有点不认同', value: 2 },
+          { label: '有点认同', value: 3 },
+          { label: '完全认同', value: 4 }
         ]
       },
       {
-        id: 'q17', dim: 'A3',
-        text: '我认为打排球不仅是为了赢，更是为了个人成长',
+        id: 'q25', dim: 'I',
+        text: '当队友受伤时，我会主动关心他的情况，陪他去医务室',
         options: [
           { label: '完全不认同', value: 1 },
-          { label: '有点认同', value: 2 },
-          { label: '完全认同', value: 3 }
+          { label: '有点不认同', value: 2 },
+          { label: '有点认同', value: 3 },
+          { label: '完全认同', value: 4 }
+        ]
+      },
+      // 生活作风态度相关问题（9）
+      {
+        id: 'q26', dim: 'I',
+        text: '同学遇到困难时，我会主动伸出援手，帮助他们解决问题',
+        options: [
+          { label: '完全不认同', value: 1 },
+          { label: '有点不认同', value: 2 },
+          { label: '有点认同', value: 3 },
+          { label: '完全认同', value: 4 }
+        ]
+      },
+      // 生活作风态度相关问题（10）
+      {
+        id: 'q27', dim: 'J',
+        text: '面对强大的对手，我相信自己有能力战胜他们',
+        options: [
+          { label: '完全不认同', value: 1 },
+          { label: '有点不认同', value: 2 },
+          { label: '有点认同', value: 3 },
+          { label: '完全认同', value: 4 }
+        ]
+      },
+      // 排球相关问题（补充）
+      {
+        id: 'q28', dim: 'B',
+        text: '每天放学后排球馆里，我会独自练习发球和扣球技巧',
+        options: [
+          { label: '完全不认同', value: 1 },
+          { label: '有点不认同', value: 2 },
+          { label: '有点认同', value: 3 },
+          { label: '完全认同', value: 4 }
         ]
       },
       {
-        id: 'q18', dim: 'A3',
-        text: '我会为排球比赛设定明确的目标，并努力实现',
+        id: 'q29', dim: 'C',
+        text: '当比赛陷入胶着状态时，我会站出来承担关键球的责任，而不是等待其他人来鼓励我',
         options: [
           { label: '完全不认同', value: 1 },
-          { label: '有点认同', value: 2 },
-          { label: '完全认同', value: 3 }
+          { label: '有点不认同', value: 2 },
+          { label: '有点认同', value: 3 },
+          { label: '完全认同', value: 4 }
         ]
       },
       {
-        id: 'q19', dim: 'Ac1',
-        text: '在排球比赛中，我更倾向于主动进攻而不是防守',
+        id: 'q30', dim: 'D',
+        text: '训练时我会分析自己的扣球录像，找出动作中的不足之处，而不是因为难为情不敢看自己丑陋的动作而忽略它们',
         options: [
           { label: '完全不认同', value: 1 },
-          { label: '有点认同', value: 2 },
-          { label: '完全认同', value: 3 }
+          { label: '有点不认同', value: 2 },
+          { label: '有点认同', value: 3 },
+          { label: '完全认同', value: 4 }
         ]
       },
       {
-        id: 'q20', dim: 'Ac1',
-        text: '我会为了提高排球技术而主动学习新技巧',
+        id: 'q31', dim: 'E',
+        text: '在关键时刻，我能理性判断，准确完成关键传球或扣球',
         options: [
           { label: '完全不认同', value: 1 },
-          { label: '有点认同', value: 2 },
-          { label: '完全认同', value: 3 }
+          { label: '有点不认同', value: 2 },
+          { label: '有点认同', value: 3 },
+          { label: '完全认同', value: 4 }
         ]
       },
       {
-        id: 'q21', dim: 'Ac2',
-        text: '在排球比赛中，我做决定非常果断，不会犹豫',
+        id: 'q32', dim: 'F',
+        text: '训练间隙，我会和队友聊天说笑，缓解大家的疲劳',
         options: [
           { label: '完全不认同', value: 1 },
-          { label: '有点认同', value: 2 },
-          { label: '完全认同', value: 3 }
+          { label: '有点不认同', value: 2 },
+          { label: '有点认同', value: 3 },
+          { label: '完全认同', value: 4 }
         ]
       },
       {
-        id: 'q22', dim: 'Ac2',
-        text: '我能在排球比赛中快速分析局势并做出正确判断',
+        id: 'q33', dim: 'G',
+        text: '为了提高弹跳力，我会坚持每天做额外的蛙跳和深蹲训练，而不是觉得太累还是去打游戏吧',
         options: [
           { label: '完全不认同', value: 1 },
-          { label: '有点认同', value: 2 },
-          { label: '完全认同', value: 3 }
+          { label: '有点不认同', value: 2 },
+          { label: '有点认同', value: 3 },
+          { label: '完全认同', value: 4 }
         ]
       },
       {
-        id: 'q23', dim: 'Ac3',
-        text: '我会严格执行训练计划，不偷懒',
+        id: 'q34', dim: 'H',
+        text: '我相信自己的表现能激励队友，提升整个团队的士气',
         options: [
           { label: '完全不认同', value: 1 },
-          { label: '有点认同', value: 2 },
-          { label: '完全认同', value: 3 }
+          { label: '有点不认同', value: 2 },
+          { label: '有点认同', value: 3 },
+          { label: '完全认同', value: 4 }
         ]
       },
       {
-        id: 'q24', dim: 'Ac3',
-        text: '即使在疲惫的情况下，我也会坚持完成排球训练',
+        id: 'q35', dim: 'J',
+        text: '在比赛中，我相信自己的能力，即使面对困难也能保持信心',
         options: [
           { label: '完全不认同', value: 1 },
-          { label: '有点认同', value: 2 },
-          { label: '完全认同', value: 3 }
-        ]
-      },
-      {
-        id: 'q25', dim: 'So1',
-        text: '我会主动与队友建立良好的关系，不仅是在球场上',
-        options: [
-          { label: '完全不认同', value: 1 },
-          { label: '有点认同', value: 2 },
-          { label: '完全认同', value: 3 }
-        ]
-      },
-      // 生活作风态度相关问题（10个）
-      {
-        id: 'q26', dim: 'So1',
-        text: '我喜欢主动与人交往，扩展自己的社交圈',
-        options: [
-          { label: '完全不认同', value: 1 },
-          { label: '有点认同', value: 2 },
-          { label: '完全认同', value: 3 }
-        ]
-      },
-      {
-        id: 'q27', dim: 'So2',
-        text: '我在生活中注重个人隐私，不喜欢被过度打扰',
-        options: [
-          { label: '完全不认同', value: 1 },
-          { label: '有点认同', value: 2 },
-          { label: '完全认同', value: 3 }
-        ]
-      },
-      {
-        id: 'q28', dim: 'So2',
-        text: '我会与他人保持适当的距离，避免过于亲密',
-        options: [
-          { label: '完全不认同', value: 1 },
-          { label: '有点认同', value: 2 },
-          { label: '完全认同', value: 3 }
-        ]
-      },
-      {
-        id: 'q29', dim: 'So3',
-        text: '我在不同场合会表现出不同的自己，适应环境',
-        options: [
-          { label: '完全不认同', value: 1 },
-          { label: '有点认同', value: 2 },
-          { label: '完全认同', value: 3 }
-        ]
-      },
-      {
-        id: 'q30', dim: 'So3',
-        text: '我会根据不同的人调整自己的表达方式',
-        options: [
-          { label: '完全不认同', value: 1 },
-          { label: '有点认同', value: 2 },
-          { label: '完全认同', value: 3 }
-        ]
-      },
-      {
-        id: 'q31', dim: 'S1',
-        text: '我对自己的生活充满自信，相信能克服困难',
-        options: [
-          { label: '完全不认同', value: 1 },
-          { label: '有点认同', value: 2 },
-          { label: '完全认同', value: 3 }
-        ]
-      },
-      {
-        id: 'q32', dim: 'S2',
-        text: '我清楚自己的人生目标和方向',
-        options: [
-          { label: '完全不认同', value: 1 },
-          { label: '有点认同', value: 2 },
-          { label: '完全认同', value: 3 }
-        ]
-      },
-      {
-        id: 'q33', dim: 'S3',
-        text: '我会为了实现目标而努力奋斗，不轻易放弃',
-        options: [
-          { label: '完全不认同', value: 1 },
-          { label: '有点认同', value: 2 },
-          { label: '完全认同', value: 3 }
-        ]
-      },
-      {
-        id: 'q34', dim: 'A1',
-        text: '我相信人性本善，愿意信任他人',
-        options: [
-          { label: '完全不认同', value: 1 },
-          { label: '有点认同', value: 2 },
-          { label: '完全认同', value: 3 }
-        ]
-      },
-      {
-        id: 'q35', dim: 'A3',
-        text: '我认为生活有意义，值得为之努力',
-        options: [
-          { label: '完全不认同', value: 1 },
-          { label: '有点认同', value: 2 },
-          { label: '完全认同', value: 3 }
+          { label: '有点不认同', value: 2 },
+          { label: '有点认同', value: 3 },
+          { label: '完全认同', value: 4 }
         ]
       }
     ];
@@ -1223,131 +1263,138 @@
     "cn": "北信介",
     "intro": "做好每一件平凡的事。",
     "desc": "你像北信介一样，沉稳自律、内心强大，坚持做好每一件小事。你看似平凡，却拥有最坚韧的灵魂，是真正的强者。"
+  },
+  "DAICHI": {
+    "code": "DAICHI",
+    "cn": "泽村大地",
+    "intro": "作为队长，我必须保护大家。",
+    "desc": "你像泽村大地一样，责任感强、可靠稳重，是团队的坚实后盾。你以身作则，用行动带领团队前进，是真正的领导者。"
+  },
+  "YAMAGUCHI": {
+    "code": "YAMAGUCHI",
+    "cn": "山口忠",
+    "intro": "我会努力追上大家的脚步。",
+    "desc": "你像山口忠一样，努力上进、默默付出，即使不是最耀眼的那一个，也能通过自己的努力为团队做出贡献。"
+  },
+  "AZUMA": {
+    "code": "AZUMA",
+    "cn": "东峰旭",
+    "intro": "我要成为乌野的力量。",
+    "desc": "你像东峰旭一样，外表沉默但内心火热，关键时刻能够站出来为团队贡献力量，是可靠的队友。"
+  },
+  "KIYOMIZU": {
+    "code": "KIYOMIZU",
+    "cn": "清水结子",
+    "intro": "乌野的应援声是最强的武器！",
+    "desc": "你像清水结子一样，热情开朗、充满活力，是团队的精神支柱。你的支持和鼓励能够激励队友们发挥出最佳水平。"
   }
 };
     // 人格类型图片映射：存储各角色的图片路径
     const TYPE_IMAGES = {
-  "HINATA": “”,
-  "KAGEYAMA": "",
-  "OIKAWA": "",
-  "SUWAMURA": "",
-  "TSUKISHIMA": "",
-  "TANAKA": "",
-  "NISHINOYA": "",
-  "KOSHI": "",
-  "KUROO": "",
-  "IWAIZUMI": "",
-  "USHIJIMA": "",
-  "TENDO": "",
-  "HOSHI": "",
-  "MIYAATSU": "",
-  "MIYASATSU": "",
-  "BOKUTO": "",
-  "AKAASHI": "",
-  "KITA": ""
+  "HINATA": "./image/HINATA.jpg",
+  "KAGEYAMA": "./image/KAGEYAMA.jpg", 
+  "OIKAWA": "./image/OIKAWA.png",
+  "SUWAMURA": "./image/SUWAMURA.jpg",
+  "TSUKISHIMA": "./image/TSUKISHIMA.jpg",
+  "TANAKA": "./image/TANAKA.webp",
+  "NISHINOYA": "./image/NISHINOYA.webp", 
+  "KOSHI": "./image/KOSHI.webp",
+  "KUROO": "./image/KUROO.jpg",
+  "IWAIZUMI": "./image/IWAIZUMI.jpg",
+  "USHIJIMA": "./image/USHIJIMA.webp", 
+  "TENDO": "./image/TENDO.jpg",
+  "HOSHI": "./image/HOSHI.webp",
+  "MIYAATSU": "./image/MYAATSU.webp",
+  "MIYASATSU": "./image/MIYASATSU.webp",
+  "BOKUTO": "./image/BOKUTO.webp",
+  "AKAASHI": "./image/AKAASHI.webp",
+  "KITA": "./image/KITA.jpg",
+  "DAICHI": "./image/DAICHI.jpg",
+  "YAMAGUCHI": "./image/YAMAGUCHI.jpg",
+  "AZUMA": "./image/AZUMA.webp",
+  "KIYOMIZU": "./image/KIYOMIZU.webp"
 };
 
     // 正常人格类型：定义各角色的维度模式
     const NORMAL_TYPES = [
-  { code: "HINATA", pattern: "HHM-HHH-MHL-HMH-MHL" },
-  { code: "KAGEYAMA", pattern: "HHH-HHH-MHH-HHH-MHL" },
-  { code: "OIKAWA", pattern: "HHM-HMH-MHL-HMH-MHL" },
-  { code: "SUWAMURA", pattern: "MHM-MMH-MHL-MMH-MHL" },
-  { code: "TSUKISHIMA", pattern: "HHL-HLH-MLL-MMH-MHL" },
-  { code: "TANAKA", pattern: "HHM-HMH-MLL-HMH-MHL" },
-  { code: "NISHINOYA", pattern: "HHM-HHH-MHL-HMH-MHL" },
-  { code: "KOSHI", pattern: "MHL-MLH-MLL-MMH-MHL" },
-  { code: "KUROO", pattern: "HHM-HMH-MHL-HHH-MHL" },
-  { code: "IWAIZUMI", pattern: "MHM-MMH-MHL-MMH-MHL" },
-  { code: "USHIJIMA", pattern: "HHH-HHH-MHH-HHH-MHL" },
-  { code: "TENDO", pattern: "HHM-HMH-MHL-HMH-MHL" },
-  { code: "HOSHI", pattern: "HHM-HHH-MHL-HMH-MHL" },
-  { code: "MIYAATSU", pattern: "HHL-HLH-MLL-MMH-MHL" },
-  { code: "MIYASATSU", pattern: "HHH-HHH-MHH-HHH-MHL" },
-  { code: "BOKUTO", pattern: "HHM-HHH-MHL-HMH-MHL" },
-  { code: "AKAASHI", pattern: "HHL-HLH-MLL-MMH-MHL" },
-  { code: "KITA", pattern: "MHM-MMH-MHL-MMH-MHL" }
+  { code: "HINATA", pattern: "HHMHHMHMHM" },
+  { code: "KAGEYAMA", pattern: "HHMHHHHMHM" },
+  { code: "OIKAWA", pattern: "HHMHHHHHHM" },
+  { code: "SUWAMURA", pattern: "MHLMLLHHMM" },
+  { code: "TSUKISHIMA", pattern: "MLLMHMHHML" },
+  { code: "TANAKA", pattern: "HHMHHMMHML" },
+  { code: "NISHINOYA", pattern: "HHHMHLHHMM" },
+  { code: "KOSHI", pattern: "LLLMHMHHML" },
+  { code: "KUROO", pattern: "HHMHHMHHML" },
+  { code: "IWAIZUMI", pattern: "HHMHHMHHML" },
+  { code: "USHIJIMA", pattern: "HHMHHHHHML" },
+  { code: "TENDO", pattern: "HHHMHMHHMM" },
+  { code: "HOSHI", pattern: "HHMHHMMHML" },
+  { code: "MIYAATSU", pattern: "MHMHHHHHML" },
+  { code: "MIYASATSU", pattern: "HHMHHHHHML" },
+  { code: "BOKUTO", pattern: "HHMHHMMHMM" },
+  { code: "AKAASHI", pattern: "MHMHLHHHML" },
+  { code: "KITA", pattern: "MLLMHMHHML" },
+  { code: "DAICHI", pattern: "HHMMHMHHML" },
+  { code: "YAMAGUCHI", pattern: "MHMLLMHLML" },
+  { code: "AZUMA", pattern: "MHLHHMMHMM" },
+  { code: "KIYOMIZU", pattern: "HHMMLLHMLM" }
 ];
     // 维度解释：为每个维度的不同水平提供解释
     const DIM_EXPLANATIONS = {
-  "S1": {
-    "L": "对自己下手比别人还狠，夸你两句你都想先验明真伪。",
-    "M": "自信值随天气波动，顺风能飞，逆风先缩。",
-    "H": "心里对自己大致有数，不太会被路人一句话打散。"
+  "A": {
+    "L": "对排球缺乏热情，认为它只是一项社团活动，训练时常常感到疲惫。",
+    "M": "对排球有一定热情，会认真参加训练，但遇到困难时可能会犹豫。",
+    "H": "对排球充满热情，即使面对强大对手也能保持斗志：'我也可以成为王牌！'"
   },
-  "S2": {
-    "L": "内心频道雪花较多，常在“我是谁”里循环缓存。",
-    "M": "平时还能认出自己，偶尔也会被情绪临时换号。",
-    "H": "对自己的脾气、欲望和底线都算门儿清。"
+  "B": {
+    "L": "更倾向于防守，认为稳定的防守是胜利的基础，默默守护全队。",
+    "M": "攻防平衡，根据比赛情况灵活调整策略，既能进攻也能防守。",
+    "H": "喜欢主动进攻，追求强大：'强大就是正义。'，不断寻找得分机会。"
   },
-  "S3": {
-    "L": "更在意舒服和安全，没必要天天给人生开冲刺模式。",
-    "M": "想上进，也想躺会儿，价值排序经常内部开会。",
-    "H": "很容易被目标、成长或某种重要信念推着往前。"
+  "C": {
+    "L": "喜欢追随自己选定的领导者，拥护他并认真执行球场上的每个任务，默默支持队友。",
+    "M": "在某些情况下会承担领导责任，但更愿意在团队中发挥自己的作用，辅助队长。",
+    "H": "主动承担领导责任：'不仅是天才，更是努力家。'，带领团队前进。"
   },
-  "E1": {
-    "L": "感情里警报器灵敏，已读不回都能脑补到大结局。",
-    "M": "一半信任，一半试探，感情里常在心里拉锯。",
-    "H": "更愿意相信关系本身，不会被一点风吹草动吓散。"
+  "D": {
+    "L": "思考方式直接，更依赖直觉和经验，直率地面对比赛。",
+    "M": "有一定思考能力，能基本分析比赛局势，做出合理的判断。",
+    "H": "思维敏捷，善于分析和制定策略，用智慧赢得比赛。"
   },
-  "E2": {
-    "L": "感情投入偏克制，心门不是没开，是门禁太严。",
-    "M": "会投入，但会给自己留后手，不至于全盘梭哈。",
-    "H": "一旦认定就容易认真，情绪和精力都给得很足。"
+  "E": {
+    "L": "情绪丰富，容易被比赛局势影响，但也因此充满激情，情绪化但充满活力。",
+    "M": "能平衡情绪和理性，在大多数情况下做出合理的判断。",
+    "H": "理性分析：'我是球场上的王者！'，能在压力下保持理性判断，做出正确决策。"
   },
-  "E3": {
-    "L": "容易黏人也容易被黏，关系里的温度感很重要。",
-    "M": "亲密和独立都要一点，属于可调节型依赖。",
-    "H": "空间感很重要，再爱也得留一块属于自己的地。"
+  "F": {
+    "L": "性格内敛，更喜欢安静地专注于自己的事情，用自己的方式观察世界。",
+    "M": "性格温和，能与队友友好相处，保持积极的心态。",
+    "H": "性格开朗，阳光积极，充满正能量，感染身边的每一个人。"
   },
-  "A1": {
-    "L": "看世界自带防御滤镜，先怀疑，再靠近。",
-    "M": "既不天真也不彻底阴谋论，观望是你的本能。",
-    "H": "更愿意相信人性和善意，遇事不急着把世界判死刑。"
+  "G": {
+    "L": "更注重自己的感受，遇到困难时会考虑退缩，但也懂得保护自己。",
+    "M": "有一定韧性，能面对一般的困难，但在巨大压力下可能会动摇。",
+    "H": "坚韧不拔：'做好每一件平凡的事。'，面对困难不轻易放弃。"
   },
-  "A2": {
-    "L": "规则能绕就绕，舒服和自由往往排在前面。",
-    "M": "该守的时候守，该变通的时候也不死磕。",
-    "H": "秩序感较强，能按流程来就不爱即兴炸场。"
+  "H": {
+    "L": "存在感低，不喜欢被关注，更愿意在幕后默默贡献，低调但可靠。",
+    "M": "存在感适中，在需要时能展现自己的能力，为团队做出贡献。",
+    "H": "存在感强：'我，就是最强的二传！'，喜欢成为球场上的焦点。"
   },
-  "A3": {
-    "L": "意义感偏低，容易觉得很多事都像在走过场。",
-    "M": "偶尔有目标，偶尔也想摆烂，人生观处于半开机。",
-    "H": "做事更有方向，知道自己大概要往哪边走。"
+  "I": {
+    "L": "性格直率，说话直接，有着独特的表达方式，但内心依然关心队友。",
+    "M": "有一定温柔，能关心他人但不擅长表达，用行动证明自己的关心。",
+    "H": "性格温柔：'大家放心，有我在。'，善于关心和帮助他人。"
   },
-  "Ac1": {
-    "L": "做事先考虑别翻车，避险系统比野心更先启动。",
-    "M": "有时想赢，有时只想别麻烦，动机比较混合。",
-    "H": "更容易被成果、成长和推进感点燃。"
-  },
-  "Ac2": {
-    "L": "做决定前容易多转几圈，脑内会议常常超时。",
-    "M": "会想，但不至于想死机，属于正常犹豫。",
-    "H": "拍板速度快，决定一下就不爱回头磨叽。"
-  },
-  "Ac3": {
-    "L": "执行力和死线有深厚感情，越晚越像要觉醒。",
-    "M": "能做，但状态看时机，偶尔稳偶尔摆。",
-    "H": "推进欲比较强，事情不落地心里都像卡了根刺。"
-  },
-  "So1": {
-    "L": "社交启动慢热，主动出击这事通常得攒半天气。",
-    "M": "有人来就接，没人来也不硬凑，社交弹性一般。",
-    "H": "更愿意主动打开场子，在人群里不太怕露头。"
-  },
-  "So2": {
-    "L": "关系里更想亲近和融合，熟了就容易把人划进内圈。",
-    "M": "既想亲近又想留缝，边界感看对象调节。",
-    "H": "边界感偏强，靠太近会先本能性后退半步。"
-  },
-  "So3": {
-    "L": "表达更直接，心里有啥基本不爱绕。",
-    "M": "会看气氛说话，真实和体面通常各留一点。",
-    "H": "对不同场景的自我切换更熟练，真实感会分层发放。"
+  "J": {
+    "L": "缺乏自信，在比赛中容易自我怀疑，需要队友的鼓励和支持。",
+    "M": "有一定自信，能在熟悉的情况下发挥自己的能力，但在压力下可能会犹豫。",
+    "H": "自信满满：'我，就是最强的！'，相信自己的能力，即使面对困难也能保持信心。"
   }
 };
     // 维度顺序：定义计算结果时的维度顺序
-    const dimensionOrder = ['S1','S2','S3','E1','E2','E3','A1','A2','A3','Ac1','Ac2','Ac3','So1','So2','So3'];
+    const dimensionOrder = ['A','B','C','D','E','F','G','H','I','J'];
 
     // 应用状态：存储测试相关的状态
     const app = {
@@ -1458,9 +1505,18 @@
     }
 
     // 将分数转换为等级（L/M/H）
-    function sumToLevel(score) {
-      if (score <= 3) return 'L';
-      if (score === 4) return 'M';
+    function sumToLevel(score, maxScore) {
+      // 对于满分12分的维度，使用用户指定的区间
+      if (maxScore === 12) {
+        if (score < 6) return 'L';
+        if (score <= 10) return 'M';
+        return 'H';
+      }
+      // 对于其他满分的维度，使用等比例划分
+      const thirdScore = maxScore / 3;
+      const twoThirdsScore = maxScore * 2 / 3;
+      if (score < thirdScore) return 'L';
+      if (score < twoThirdsScore) return 'M';
       return 'H';
     }
 
@@ -1483,17 +1539,23 @@
     function computeResult() {
       const rawScores = {};
       const levels = {};
-      // 初始化每个维度的分数为0
-      Object.keys(dimensionMeta).forEach(dim => { rawScores[dim] = 0; });
+      const dimQuestionCount = {};
+      // 初始化每个维度的分数和问题数为0
+      Object.keys(dimensionMeta).forEach(dim => { 
+        rawScores[dim] = 0;
+        dimQuestionCount[dim] = 0;
+      });
 
-      // 计算每个维度的总分
+      // 计算每个维度的总分和问题数
       questions.forEach(q => {
         rawScores[q.dim] += Number(app.answers[q.id] || 0);
+        dimQuestionCount[q.dim]++;
       });
 
       // 将每个维度的分数转换为等级
       Object.entries(rawScores).forEach(([dim, score]) => {
-        levels[dim] = sumToLevel(score);
+        const maxScore = dimQuestionCount[dim] * 4; // 每个问题满分4分
+        levels[dim] = sumToLevel(score, maxScore);
       });
 
       // 计算用户向量和每个角色的相似度
@@ -1520,7 +1582,7 @@
 
       let finalType;
       let modeKicker = '你的排球少年人格';
-      let badge = `匹配度 ${bestNormal.similarity}% · 精准命中 ${bestNormal.exact}/15 维`;
+      let badge = `匹配度 ${bestNormal.similarity}% · 精准命中 ${bestNormal.exact}/10 维`;
       let sub = '维度命中度较高，你非常像这位角色！';
       let special = false;
       let secondaryType = null;
@@ -1544,14 +1606,31 @@
     // 渲染维度列表
     function renderDimList(result) {
       const dimList = document.getElementById('dimList');
+      // 定义每个维度的满分
+      const maxScores = {
+        'A': 12, // 3个问题，每个问题4分
+        'B': 16, // 4个问题，每个问题4分
+        'C': 16, // 4个问题，每个问题4分
+        'D': 16, // 4个问题，每个问题4分
+        'E': 16, // 4个问题，每个问题4分
+        'F': 16, // 4个问题，每个问题4分
+        'G': 16, // 4个问题，每个问题4分
+        'H': 16, // 4个问题，每个问题4分
+        'I': 8,  // 2个问题，每个问题4分
+        'J': 8   // 2个问题，每个问题4分
+      };
       dimList.innerHTML = dimensionOrder.map(dim => {
         const level = result.levels[dim];
+        const score = result.rawScores[dim];
+        const maxScore = maxScores[dim];
+        const dimName = dimensionMeta[dim].name;
         const explanation = DIM_EXPLANATIONS[dim][level];
+        
         return `
           <div class="dim-item">
             <div class="dim-item-top">
-              <div class="dim-item-name">${dimensionMeta[dim].name}</div>
-              <div class="dim-item-score">${level} / ${result.rawScores[dim]}分</div>
+              <div class="dim-item-name">${dimName}</div>
+              <div class="dim-item-score">${level} / ${score}分</div>
             </div>
             <p>${explanation}</p>
           </div>
