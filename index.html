@@ -687,7 +687,7 @@
   <div class="shell">
     <section id="intro" class="screen active">
       <div class="hero card hero-minimal">
-        <h1>排球少年 SBTI 人格测试</h1>
+        <h1>排球少年 HQTI 人格测试</h1>
         <div class="sub">测测你最像排球少年里的谁</div>
         <div class="hero-actions hero-actions-single">
           <button id="startBtn" class="btn-primary">开始测试</button>
@@ -789,7 +789,7 @@
       },
       {
         id: 'q2', dim: 'A',
-        text: '即使训练到筋疲力尽，我也会坚持完成最后一组扣球练习',
+        text: '即使训练到筋疲力尽，我也会坚持完成最后一组扣球练习，因为我想变得更强',
         options: [
           { label: '完全不认同', value: 1 },
           { label: '有点不认同', value: 2 },
@@ -800,7 +800,7 @@
       // 生活作风态度相关问题（1）
       {
         id: 'q3', dim: 'A',
-        text: '面对学习中的难题，我会充满热情地查阅资料，直到解决为止',
+        text: '面对学习中的难题，我会充满热情地查阅资料，直到解决为止，因为我享受挑战的过程',
         options: [
           { label: '完全不认同', value: 1 },
           { label: '有点不认同', value: 2 },
@@ -810,7 +810,7 @@
       },
       {
         id: 'q4', dim: 'B',
-        text: '面对对方高大的拦网，我会毫不犹豫地直接突破它，而不是尝试斜线扣球',
+        text: '面对对方高大的拦网，我会毫不犹豫地直接突破它，展现我的进攻实力',
         options: [
           { label: '完全不认同', value: 1 },
           { label: '有点不认同', value: 2 },
@@ -820,7 +820,7 @@
       },
       {
         id: 'q5', dim: 'B',
-        text: '当二传传出一个不太理想的球时，我会尽力调整姿势完成进攻',
+        text: '当二传传出一个不太理想的球时，我会尽力调整姿势完成进攻，不让队友的努力白费',
         options: [
           { label: '完全不认同', value: 1 },
           { label: '有点不认同', value: 2 },
@@ -831,7 +831,7 @@
       // 生活作风态度相关问题（2）
       {
         id: 'q6', dim: 'B',
-        text: '面对生活中的挑战，我会主动出击，寻找解决办法',
+        text: '面对生活中的挑战，我会主动出击，寻找解决办法，而不是等待别人帮忙',
         options: [
           { label: '完全不认同', value: 1 },
           { label: '有点不认同', value: 2 },
@@ -841,7 +841,7 @@
       },
       {
         id: 'q7', dim: 'C',
-        text: '比赛暂停时，我会主动召集队友，分析对方弱点并制定战术',
+        text: '比赛暂停时，我会主动召集队友，分析对方弱点并制定战术，带领队伍走出困境',
         options: [
           { label: '完全不认同', value: 1 },
           { label: '有点不认同', value: 2 },
@@ -851,7 +851,7 @@
       },
       {
         id: 'q8', dim: 'C',
-        text: '当队友因为失误而自责时，我会拍拍他的肩膀说："没关系，下一球我们一起赢回来"，而不是等他自己调节好情绪',
+        text: '当队友因为失误而自责时，我会拍拍他的肩膀说："没关系，下一球我们一起赢回来"，帮助他重新振作',
         options: [
           { label: '完全不认同', value: 1 },
           { label: '有点不认同', value: 2 },
@@ -862,7 +862,7 @@
       // 生活作风态度相关问题（3）
       {
         id: 'q9', dim: 'C',
-        text: '学校组织活动时，我会主动承担组织工作，协调大家的分工',
+        text: '学校组织活动时，我会主动承担组织工作，协调大家的分工，确保活动顺利进行',
         options: [
           { label: '完全不认同', value: 1 },
           { label: '有点不认同', value: 2 },
@@ -1317,24 +1317,24 @@
 
     // 正常人格类型：定义各角色的维度模式
     const NORMAL_TYPES = [
-  { code: "HINATA", pattern: "HHMHHMHMHM" },
-  { code: "KAGEYAMA", pattern: "HHMHHHHMHM" },
-  { code: "OIKAWA", pattern: "HHMHHHHHHM" },
+  { code: "HINATA", pattern: "HHMHMMHMMH" },
+  { code: "KAGEYAMA", pattern: "MHHHHMHHML" },
+  { code: "OIKAWA", pattern: "HHHHHHMHMH" },
   { code: "SUWAMURA", pattern: "MHLMLLHHMM" },
   { code: "TSUKISHIMA", pattern: "MLLMHMHHML" },
   { code: "TANAKA", pattern: "HHMHHMMHML" },
   { code: "NISHINOYA", pattern: "HHHMHLHHMM" },
   { code: "KOSHI", pattern: "LLLMHMHHML" },
-  { code: "KUROO", pattern: "HHMHHMHHML" },
-  { code: "IWAIZUMI", pattern: "HHMHHMHHML" },
+  { code: "KUROO", pattern: "HHMHHMHHHL" },
+  { code: "IWAIZUMI", pattern: "HHMHHMHLHM" },
   { code: "USHIJIMA", pattern: "HHMHHHHHML" },
   { code: "TENDO", pattern: "HHHMHMHHMM" },
-  { code: "HOSHI", pattern: "HHMHHMMHML" },
+  { code: "HOSHI", pattern: "HHMHHMMMHL" },
   { code: "MIYAATSU", pattern: "MHMHHHHHML" },
-  { code: "MIYASATSU", pattern: "HHMHHHHHML" },
+  { code: "MIYASATSU", pattern: "HHMHHHHMLM" },
   { code: "BOKUTO", pattern: "HHMHHMMHMM" },
   { code: "AKAASHI", pattern: "MHMHLHHHML" },
-  { code: "KITA", pattern: "MLLMHMHHML" },
+  { code: "KITA", pattern: "MLLMHMHHLM" },
   { code: "DAICHI", pattern: "HHMMHMHHML" },
   { code: "YAMAGUCHI", pattern: "MHMLLMHLML" },
   { code: "AZUMA", pattern: "MHLHHMMHMM" },
