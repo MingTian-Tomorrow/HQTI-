@@ -1276,16 +1276,16 @@
   { code: "IWAIZUMI", vector: [10, 6, 10, 5, 8, 6, 8, 9, 10, 8] },
   { code: "USHIJIMA", vector: [12, 7, 9, 4, 12, 10, 10, 11, 10, 8] },
   { code: "TENDO", vector: [6, 4, 8, 10, 12, 12, 10, 8, 8, 6] },
-  { code: "HOSHI", vector: [12, 8, 9, 4, 8, 10, 12, 10, 10, 8] },
+  { code: "HOSHI", vector: [12, 8, 10, 6, 8, 10, 12, 10, 10, 9] },
   { code: "MIYAATSU", vector: [10, 6, 12, 4, 10, 6, 10, 9, 12, 12] },
   { code: "MIYASATSU", vector: [10, 12, 12, 8, 12, 10, 12, 12, 10, 12] },
-  { code: "BOKUTO", vector: [12, 8, 3, 12, 10, 12, 12, 10, 8, 6] },
+  { code: "BOKUTO", vector: [12, 8, 4, 12, 10, 10, 12, 10, 8, 8] },
   { code: "AKAASHI", vector: [6, 8, 12, 8, 9, 4, 10, 9, 10, 10] },
   { code: "KITA", vector: [6, 8, 12, 8, 6, 4, 10, 8, 8, 8] },
   { code: "DAICHI", vector: [8, 10, 9, 10, 6, 8, 10, 8, 10, 8] },
   { code: "YAMAGUCHI", vector: [6, 3, 8, 6, 6, 4, 6, 8, 6, 6] },
   { code: "AZUMA", vector: [11, 3, 8, 6, 9, 8, 6, 10, 10, 8] },
-  { code: "KIYOMIZU", vector: [3, 6, 10, 12, 8, 3, 8, 3, 3, 3] }
+  { code: "KIYOMIZU", vector: [3, 6, 8, 5, 5, 3, 6, 3, 3, 3] }
 ];
     // 维度解释：为每个维度的不同水平提供解释
     const DIM_EXPLANATIONS = {
@@ -1451,7 +1451,7 @@
       // 更新提交按钮文本
       if (app.currentQuestionIndex < totalQuestions - 1) {
         submitBtn.textContent = '下一题';
-        testHint.textContent = '选择一个选项后会自动跳转到下一题';
+        testHint.textContent = '请选择答案后点击下一题继续';
       } else {
         submitBtn.textContent = '提交';
         testHint.textContent = '都做完了。现在可以把你的电子魂魄交给结果页审判。';
