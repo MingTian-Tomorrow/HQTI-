@@ -708,7 +708,10 @@
           <div class="hint" id="testHint">全选完才会放行。</div>
           <div style="display:flex; gap:12px; flex-wrap:wrap;">
             <button id="backIntroBtn" class="btn-secondary">返回首页</button>
+            <div style="display: flex; gap: 10px;">
+            <button id="prevBtn" class="btn-secondary" disabled>上一题</button>
             <button id="submitBtn" class="btn-primary" disabled>提交并查看结果</button>
+          </div>
           </div>
         </div>
       </div>
@@ -1358,11 +1361,12 @@
       result: document.getElementById('result') // 结果屏幕
     };
 
-    // DOM元素：存储页面上的关键元素
+    // 核心 DOM 元素
     const questionList = document.getElementById('questionList');
     const progressBar = document.getElementById('progressBar');
     const progressText = document.getElementById('progressText');
     const submitBtn = document.getElementById('submitBtn');
+    const prevBtn = document.getElementById('prevBtn');
     const testHint = document.getElementById('testHint');
 
     // 显示指定屏幕
@@ -1461,6 +1465,9 @@
       const currentQuestion = app.shuffledQuestions[app.currentQuestionIndex];
       const currentAnswered = currentQuestion && app.answers[currentQuestion.id] !== undefined;
       submitBtn.disabled = !currentAnswered;
+      
+      // 更新上一题按钮状态
+      prevBtn.disabled = app.currentQuestionIndex === 0;
     }
 
     // 将分数转换为等级（L/M/H）
@@ -1649,6 +1656,12 @@
     // 事件监听器：绑定按钮点击事件
     document.getElementById('startBtn').addEventListener('click', () => startTest(false));
     document.getElementById('backIntroBtn').addEventListener('click', () => showScreen('intro'));
+    document.getElementById('prevBtn').addEventListener('click', () => {
+      if (app.currentQuestionIndex > 0) {
+        app.currentQuestionIndex--;
+        renderQuestions();
+      }
+    });
     document.getElementById('submitBtn').addEventListener('click', () => {
       const totalQuestions = app.shuffledQuestions.length;
       if (app.currentQuestionIndex < totalQuestions - 1) {
