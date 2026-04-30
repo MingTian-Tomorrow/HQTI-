@@ -618,7 +618,7 @@
     .author-box summary {
       list-style: none;
       cursor: pointer;
-      padding: 18px;
+      padding: 16px 18px;
       font-size: 16px;
       font-weight: 700;
       color: var(--text);
@@ -626,6 +626,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 12px;
+      flex-wrap: wrap;
     }
     .author-box summary::-webkit-details-marker { display: none; }
     .author-box summary::after {
@@ -642,15 +643,111 @@
     .author-box[open] summary::after {
       content: '收起';
     }
+    .author-hint {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--muted);
+      margin-top: 6px;
+      flex-basis: 100%;
+      order: 3;
+      background: var(--soft);
+      padding: 10px 12px;
+      border-radius: 8px;
+    }
     .author-content {
       border-top: 1px solid var(--line);
-      padding: 0 18px 18px;
+      padding: 14px 18px 18px;
     }
     .author-content p {
       margin: 14px 0 0;
       color: #304034;
       font-size: 14px;
-      line-height: 1.9;
+      line-height: 1.8;
+    }
+    .author-main p:first-child {
+      margin-top: 0;
+    }
+    .author-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .author-item:first-child {
+      margin-top: 0;
+    }
+    .author-img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      flex-shrink: 0;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .author-img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+    .author-item .text {
+      flex: 1;
+      font-size: 14px;
+      color: #304034;
+      line-height: 1.6;
+    }
+    .lightbox {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.85);
+      backdrop-filter: blur(5px);
+    }
+    .lightbox.show {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      color: white;
+      font-size: 40px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: color 0.3s;
+      user-select: none;
+    }
+    .lightbox-close:hover {
+      color: #ccc;
+    }
+    .lightbox-content {
+      max-width: 90%;
+      max-height: 70vh;
+      object-fit: contain;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+    .download-btn {
+      margin-top: 20px;
+      padding: 12px 24px;
+      background: var(--accent-strong);
+      color: white;
+      text-decoration: none;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 14px;
+      transition: background 0.3s, transform 0.2s;
+    }
+    .download-btn:hover {
+      background: #3d5a43;
+      transform: translateY(-2px);
     }
 
     .result-actions {
@@ -692,6 +789,39 @@
         <div class="hero-actions hero-actions-single">
           <button id="startBtn" class="btn-primary">开始测试</button>
         </div>
+      </div>
+
+      <details class="author-box card" style="margin-top: 20px;">
+        <summary>
+          <span>作者信息</span>
+          <span class="author-hint">关注作者可及时收取最新版本通知，或者对相关内容进行反馈沟通！谢谢支持！作者是超活力排球少女！欢迎关注！后续也可能推出其他相关作品！嘻嘻</span>
+        </summary>
+        <div class="author-content">
+          <div class="author-main">
+            <p>作者：明明天天</p>
+            
+            <div class="author-item">
+              <img class="author-img" src="./author/douyin.jpg" alt="抖音二维码" onclick="openLightbox(this)">
+              <div class="text">抖音：明明天天（71460046204）</div>
+            </div>
+            
+            <div class="author-item">
+              <img class="author-img" src="./author/rednote.jpg" alt="小红书二维码" onclick="openLightbox(this)">
+              <div class="text">小红书：明明天天（919630201）</div>
+            </div>
+            
+            <div class="author-item">
+              <img class="author-img" src="./author/bilibili.jpg" alt="B站二维码" onclick="openLightbox(this)">
+              <div class="text">B站：明明天天呀（241427014）</div>
+            </div>
+          </div>
+        </div>
+      </details>
+      
+      <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+        <span class="lightbox-close">&times;</span>
+        <img class="lightbox-content" id="lightbox-img">
+        <a id="download-btn" class="download-btn" download>下载图片</a>
       </div>
     </section>
 
@@ -1345,6 +1475,36 @@
 };
     // 维度顺序：定义计算结果时的维度顺序
     const dimensionOrder = ['OFF','LDR','RAT','POS','TAL','WLD','CON','SRV','RC','PAS'];
+
+    // 灯箱功能：点击图片放大查看和下载
+    function openLightbox(img) {
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImg = document.getElementById('lightbox-img');
+      const downloadBtn = document.getElementById('download-btn');
+      
+      lightboxImg.src = img.src;
+      downloadBtn.href = img.src;
+      downloadBtn.download = img.alt + '.jpg';
+      
+      lightbox.classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+    
+    function closeLightbox() {
+      const lightbox = document.getElementById('lightbox');
+      lightbox.classList.remove('show');
+      document.body.style.overflow = '';
+    }
+    
+    // 点击图片本身不关闭灯箱
+    document.addEventListener('DOMContentLoaded', function() {
+      const lightboxImg = document.getElementById('lightbox-img');
+      if (lightboxImg) {
+        lightboxImg.addEventListener('click', function(e) {
+          e.stopPropagation();
+        });
+      }
+    });
 
     // 应用状态：存储测试相关的状态
     const app = {
