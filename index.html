@@ -168,6 +168,27 @@
       border: 1px solid var(--line);
       font-weight: 700;
     }
+    .language-selector {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    .lang-btn {
+      padding: 10px 18px;
+      font-size: 14px;
+    }
+    .lang-btn.active {
+      background: var(--accent-strong);
+      color: #fff;
+      border-color: var(--accent-strong);
+    }
+    .lang-hint {
+      text-align: center;
+      color: #999;
+      font-size: 13px;
+      margin-top: 10px;
+    }
 
     .screen { display: none; }
     .screen.active { display: block; }
@@ -615,8 +636,7 @@
       background: linear-gradient(180deg, #ffffff, #fbfdfb);
       overflow: hidden;
     }
-    .author-box summary {
-      list-style: none;
+    .author-header {
       cursor: pointer;
       padding: 16px 18px;
       font-size: 16px;
@@ -628,9 +648,7 @@
       gap: 12px;
       flex-wrap: wrap;
     }
-    .author-box summary::-webkit-details-marker { display: none; }
-    .author-box summary::after {
-      content: '展开';
+    .author-toggle {
       font-size: 12px;
       font-weight: 700;
       color: var(--accent-strong);
@@ -639,9 +657,6 @@
       padding: 6px 10px;
       border-radius: 999px;
       flex-shrink: 0;
-    }
-    .author-box[open] summary::after {
-      content: '收起';
     }
     .author-hint {
       font-size: 13px;
@@ -784,39 +799,44 @@
   <div class="shell">
     <section id="intro" class="screen active">
       <div class="hero card hero-minimal">
-        <h1>排球少年 HQTI 人格测试</h1>
-        <div class="sub">测测你最像排球少年里的谁</div>
-        <div class="hero-actions hero-actions-single">
-          <button id="startBtn" class="btn-primary">开始测试</button>
+        <h1 id="introTitle">排球少年 HQTI 人格测试</h1>
+        <div class="sub" id="introSubtitle">测测你最像排球少年里的谁</div>
+        <div class="language-selector" id="languageSelector">
+          <button id="langZhBtn" class="btn-secondary lang-btn active">简体中文</button>
+          <button id="langEnBtn" class="btn-secondary lang-btn">English</button>
         </div>
+        <div class="hero-actions hero-actions-single">
+          <button id="startBtn" class="btn-primary" disabled>开始测试</button>
+        </div>
+        <div class="lang-hint" id="langHint">请先选择语言</div>
       </div>
 
-      <details class="author-box card" style="margin-top: 20px;">
-        <summary>
-          <span>作者信息</span>
-          <span class="author-hint">关注作者可及时收取最新版本通知，或者对相关内容进行反馈沟通！谢谢支持！作者是超活力排球少女！欢迎关注！后续也可能推出其他相关作品！嘻嘻</span>
-        </summary>
-        <div class="author-content">
+      <div class="author-box card" style="margin-top: 20px;" id="authorBox">
+        <div class="author-header" onclick="toggleAuthorBox()">
+          <span id="authorTitle">作者信息</span>
+          <span class="author-hint" id="authorHint">关注作者可及时收取最新版本通知，或者对相关内容进行反馈沟通！谢谢支持！作者是超活力排球少女！欢迎关注！后续也可能推出其他相关作品！嘻嘻</span>
+          <span id="authorToggle" class="author-toggle">▼</span>
+        </div>
+        <div class="author-content" id="authorContent" style="display:none;">
           <div class="author-main">
-            <p>作者：明明天天</p>
-            
+            <p id="authorName">作者：明明天天</p>
+
             <div class="author-item">
-              <img class="author-img" src="./author/douyin.jpg" alt="抖音二维码" onclick="openLightbox(this)">
-              <div class="text">抖音：明明天天（71460046204）</div>
+              <img class="author-img" src="./author/douyin.jpg" alt="TikTok QR" onclick="openLightbox(this)">
+              <div class="text" id="authorDouyin">抖音：明明天天（71460046204）</div>
             </div>
-            
+
             <div class="author-item">
-              <img class="author-img" src="./author/rednote.jpg" alt="小红书二维码" onclick="openLightbox(this)">
-              <div class="text">小红书：明明天天（919630201）</div>
+              <img class="author-img" src="./author/rednote.jpg" alt="RedNote QR" onclick="openLightbox(this)">
+              <div class="text" id="authorRednote">小红书：明明天天（919630201）</div>
             </div>
-            
+
             <div class="author-item">
-              <img class="author-img" src="./author/bilibili.jpg" alt="B站二维码" onclick="openLightbox(this)">
-              <div class="text">B站：明明天天呀（241427014）</div>
+              <img class="author-img" src="./author/bilibili.jpg" alt="Bilibili QR" onclick="openLightbox(this)">
+              <div class="text" id="authorBilibili">B站：明明天天呀（241427014）</div>
             </div>
           </div>
-        </div>
-      </details>
+      </div>
       
       <div id="lightbox" class="lightbox" onclick="closeLightbox()">
         <span class="lightbox-close">&times;</span>
@@ -866,17 +886,17 @@
           </div>
 
           <div class="analysis-box">
-            <h3>该人格的简单解读</h3>
+            <h3 id="resultDescTitle">该人格的简单解读</h3>
             <p id="resultDesc"></p>
           </div>
 
           <div class="dim-box">
-            <h3>十维度评分</h3>
+            <h3 id="dimTitle">十维度评分</h3>
             <div id="dimList" class="dim-list"></div>
           </div>
 
           <div class="note-box">
-            <h3>友情提示</h3>
+            <h3 id="funNoteTitle">友情提示</h3>
             <p id="funNote">本测试仅供娱乐，别拿它当成你球场的剧本。</p>
           </div>
 
@@ -884,6 +904,7 @@
 
         <div class="result-actions">
           <div style="display:flex; gap:12px; flex-wrap:wrap;">
+            <button id="translateBtn" class="btn-secondary">Translate</button>
             <button id="restartBtn" class="btn-secondary">重新测试</button>
             <button id="toTopBtn" class="btn-primary">回到首页</button>
           </div>
@@ -909,313 +930,334 @@
       PAS: { name: 'PAS 传球能力', model: '排球技能模型' }
     };
     const questions = [
-      // 排球相关问题（25个）
       {
         id: 'q1', dim: 'OFF',
         text: '面对对方高大的拦网（可理解为障碍），我会毫不犹豫地正面突破它，展现我的实力，而不会选择取巧的吊球（绕路）',
+        textEn: 'When facing the opponent\'s tall block (can be understood as an obstacle), I will not hesitate to break through it head-on to show my strength, rather than choosing a clever dump (taking the detour).',
         options: [
-          { label: '完全不认同', value: 1 },
-          { label: '有点不认同', value: 2 },
-          { label: '有点认同', value: 3 },
-          { label: '完全认同', value: 4 }
+          { label: '完全不认同', labelEn: 'Strongly Disagree', value: 1 },
+          { label: '有点不认同', labelEn: 'Somewhat Disagree', value: 2 },
+          { label: '有点认同', labelEn: 'Somewhat Agree', value: 3 },
+          { label: '完全认同', labelEn: 'Strongly Agree', value: 4 }
         ]
       },
       {
         id: 'q2', dim: 'OFF',
         text: '我会认为进攻是最好的防守',
+        textEn: 'I believe attack is the best defense.',
         options: [
-          { label: '完全不认同', value: 1 },
-          { label: '有点不认同', value: 2 },
-          { label: '有点认同', value: 3 },
-          { label: '完全认同', value: 4 }
+          { label: '完全不认同', labelEn: 'Strongly Disagree', value: 1 },
+          { label: '有点不认同', labelEn: 'Somewhat Disagree', value: 2 },
+          { label: '有点认同', labelEn: 'Somewhat Agree', value: 3 },
+          { label: '完全认同', labelEn: 'Strongly Agree', value: 4 }
         ]
       },
-      // 生活作风态度相关问题（1）
       {
         id: 'q3', dim: 'OFF',
         text: '我酷爱暴力美学',
+        textEn: 'I love violent aesthetics.',
         options: [
-          { label: '完全不认同', value: 1 },
-          { label: '有点不认同', value: 2 },
-          { label: '有点认同', value: 3 },
-          { label: '完全认同', value: 4 }
+          { label: '完全不认同', labelEn: 'Strongly Disagree', value: 1 },
+          { label: '有点不认同', labelEn: 'Somewhat Disagree', value: 2 },
+          { label: '有点认同', labelEn: 'Somewhat Agree', value: 3 },
+          { label: '完全认同', labelEn: 'Strongly Agree', value: 4 }
         ]
       },
       {
         id: 'q4', dim: 'LDR',
         text: '我通常是带领队伍走出困境的人，而不是等待别人带领我',
+        textEn: 'I am usually the one who leads the team out of trouble, rather than waiting for someone to lead me.',
         options: [
-          { label: '完全不认同', value: 1 },
-          { label: '有点不认同', value: 2 },
-          { label: '有点认同', value: 3 },
-          { label: '完全认同', value: 4 }
+          { label: '完全不认同', labelEn: 'Strongly Disagree', value: 1 },
+          { label: '有点不认同', labelEn: 'Somewhat Disagree', value: 2 },
+          { label: '有点认同', labelEn: 'Somewhat Agree', value: 3 },
+          { label: '完全认同', labelEn: 'Strongly Agree', value: 4 }
         ]
       },
       {
         id: 'q5', dim: 'LDR',
         text: '一起出去玩时周围的人会因为我在身边感到放心而不是闹心',
+        textEn: 'When going out with friends, people around feel relieved rather than worried because I am by their side.',
         options: [
-          { label: '完全不认同', value: 1 },
-          { label: '有点不认同', value: 2 },
-          { label: '有点认同', value: 3 },
-          { label: '完全认同', value: 4 }
+          { label: '完全不认同', labelEn: 'Strongly Disagree', value: 1 },
+          { label: '有点不认同', labelEn: 'Somewhat Disagree', value: 2 },
+          { label: '有点认同', labelEn: 'Somewhat Agree', value: 3 },
+          { label: '完全认同', labelEn: 'Strongly Agree', value: 4 }
         ]
       },
-      // 生活作风态度相关问题（2）
       {
         id: 'q6', dim: 'LDR',
         text: '我在生活中经常主动承担组织工作',
+        textEn: 'I often take the initiative to organize things in my life.',
         options: [
-          { label: '完全不认同', value: 1 },
-          { label: '有点不认同', value: 2 },
-          { label: '有点认同', value: 3 },
-          { label: '完全认同', value: 4 }
+          { label: '完全不认同', labelEn: 'Strongly Disagree', value: 1 },
+          { label: '有点不认同', labelEn: 'Somewhat Disagree', value: 2 },
+          { label: '有点认同', labelEn: 'Somewhat Agree', value: 3 },
+          { label: '完全认同', labelEn: 'Strongly Agree', value: 4 }
         ]
       },
       {
         id: 'q7', dim: 'RAT',
         text: '当裁判做出不利于我方的判罚时，我会理性接受并专注于下一个球，而不是勇敢地上前争执',
+        textEn: 'When the referee makes a call against my team, I will rationally accept it and focus on the next play, rather than bravely arguing forward.',
         options: [
-          { label: '完全不认同', value: 1 },
-          { label: '有点不认同', value: 2 },
-          { label: '有点认同', value: 3 },
-          { label: '完全认同', value: 4 }
+          { label: '完全不认同', labelEn: 'Strongly Disagree', value: 1 },
+          { label: '有点不认同', labelEn: 'Somewhat Disagree', value: 2 },
+          { label: '有点认同', labelEn: 'Somewhat Agree', value: 3 },
+          { label: '完全认同', labelEn: 'Strongly Agree', value: 4 }
         ]
       },
       {
         id: 'q8', dim: 'RAT',
         text: '大脑是我最有利的武器，我会洞察敌人的心理，反将一军。',
+        textEn: 'The brain is my most powerful weapon. I can see through the enemy\'s psychology and turn the tables.',
         options: [
-          { label: '完全不认同', value: 1 },
-          { label: '有点不认同', value: 2 },
-          { label: '有点认同', value: 3 },
-          { label: '完全认同', value: 4 }
+          { label: '完全不认同', labelEn: 'Strongly Disagree', value: 1 },
+          { label: '有点不认同', labelEn: 'Somewhat Disagree', value: 2 },
+          { label: '有点认同', labelEn: 'Somewhat Agree', value: 3 },
+          { label: '完全认同', labelEn: 'Strongly Agree', value: 4 }
         ]
       },
-      // 生活作风态度相关问题（3）
       {
         id: 'q9', dim: 'RAT',
         text: '我眼中的世界是充满数据的，我经常思考事物运行的原理，享受这种抽丝剥茧的过程。',
+        textEn: 'The world in my eyes is full of data. I often think about how things work and enjoy the process of unraveling complexity.',
         options: [
-          { label: '完全不认同', value: 1 },
-          { label: '有点不认同', value: 2 },
-          { label: '有点认同', value: 3 },
-          { label: '完全认同', value: 4 }
+          { label: '完全不认同', labelEn: 'Strongly Disagree', value: 1 },
+          { label: '有点不认同', labelEn: 'Somewhat Disagree', value: 2 },
+          { label: '有点认同', labelEn: 'Somewhat Agree', value: 3 },
+          { label: '完全认同', labelEn: 'Strongly Agree', value: 4 }
         ]
       },
       {
         id: 'q10', dim: 'POS',
         text: '常常有人评价我为温暖的人，而不是严肃的人',
+        textEn: 'People often describe me as a warm person rather than a serious one.',
         options: [
-          { label: '完全不认同', value: 1 },
-          { label: '有点不认同', value: 2 },
-          { label: '有点认同', value: 3 },
-          { label: '完全认同', value: 4 }
+          { label: '完全不认同', labelEn: 'Strongly Disagree', value: 1 },
+          { label: '有点不认同', labelEn: 'Somewhat Disagree', value: 2 },
+          { label: '有点认同', labelEn: 'Somewhat Agree', value: 3 },
+          { label: '完全认同', labelEn: 'Strongly Agree', value: 4 }
         ]
       },
       {
         id: 'q11', dim: 'POS',
         text: '即使队伍大比分落后，我会主动站出来大吼一声鼓励队友："我们还有机会，不要放弃！"',
+        textEn: 'Even when the team is far behind, I will stand up and shout to encourage my teammates: "We still have a chance, don\'t give up!"',
         options: [
-          { label: '完全不认同', value: 1 },
-          { label: '有点不认同', value: 2 },
-          { label: '有点认同', value: 3 },
-          { label: '完全认同', value: 4 }
+          { label: '完全不认同', labelEn: 'Strongly Disagree', value: 1 },
+          { label: '有点不认同', labelEn: 'Somewhat Disagree', value: 2 },
+          { label: '有点认同', labelEn: 'Somewhat Agree', value: 3 },
+          { label: '完全认同', labelEn: 'Strongly Agree', value: 4 }
         ]
       },
-      // 生活作风态度相关问题（4）
       {
         id: 'q12', dim: 'POS',
         text: '即使是有段时间没联系的朋友，我也会在想到TA时主动和TA分享我的生活和经历',
+        textEn: 'Even friends I haven\'t contacted for a while, I will take the initiative to share my life and experiences when I think of them.',
         options: [
-          { label: '完全不认同', value: 1 },
-          { label: '有点不认同', value: 2 },
-          { label: '有点认同', value: 3 },
-          { label: '完全认同', value: 4 }
+          { label: '完全不认同', labelEn: 'Strongly Disagree', value: 1 },
+          { label: '有点不认同', labelEn: 'Somewhat Disagree', value: 2 },
+          { label: '有点认同', labelEn: 'Somewhat Agree', value: 3 },
+          { label: '完全认同', labelEn: 'Strongly Agree', value: 4 }
         ]
       },
       {
         id: 'q13', dim: 'TAL',
         text: '我在排球方面有天生的敏锐感，运动神经也很好',
+        textEn: 'I have a natural sensitivity in volleyball and good athletic instincts.',
         options: [
-          { label: '完全不认同', value: 1 },
-          { label: '有点不认同', value: 2 },
-          { label: '有点认同', value: 3 },
-          { label: '完全认同', value: 4 }
+          { label: '完全不认同', labelEn: 'Strongly Disagree', value: 1 },
+          { label: '有点不认同', labelEn: 'Somewhat Disagree', value: 2 },
+          { label: '有点认同', labelEn: 'Somewhat Agree', value: 3 },
+          { label: '完全认同', labelEn: 'Strongly Agree', value: 4 }
         ]
       },
       {
         id: 'q14', dim: 'TAL',
         text: '比赛中我能快速理解对手的战术，并做出相应的调整',
+        textEn: 'During the game, I can quickly understand the opponent\'s tactics and make corresponding adjustments.',
         options: [
-          { label: '完全不认同', value: 1 },
-          { label: '有点不认同', value: 2 },
-          { label: '有点认同', value: 3 },
-          { label: '完全认同', value: 4 }
+          { label: '完全不认同', labelEn: 'Strongly Disagree', value: 1 },
+          { label: '有点不认同', labelEn: 'Somewhat Disagree', value: 2 },
+          { label: '有点认同', labelEn: 'Somewhat Agree', value: 3 },
+          { label: '完全认同', labelEn: 'Strongly Agree', value: 4 }
         ]
       },
-      // 生活作风态度相关问题（1）
       {
         id: 'q15', dim: 'TAL',
         text: '我在学习新技能时，通常比其他人掌握得更快',
+        textEn: 'When learning new skills, I usually master them faster than others.',
         options: [
-          { label: '完全不认同', value: 1 },
-          { label: '有点不认同', value: 2 },
-          { label: '有点认同', value: 3 },
-          { label: '完全认同', value: 4 }
+          { label: '完全不认同', labelEn: 'Strongly Disagree', value: 1 },
+          { label: '有点不认同', labelEn: 'Somewhat Disagree', value: 2 },
+          { label: '有点认同', labelEn: 'Somewhat Agree', value: 3 },
+          { label: '完全认同', labelEn: 'Strongly Agree', value: 4 }
         ]
       },
       {
         id: 'q16', dim: 'WLD',
         text: '我渴望成为众人的焦点，掌声和赞美是我的兴奋剂！',
+        textEn: 'I long to be the center of attention. Applause and praise are my stimulants!',
         options: [
-          { label: '完全不认同', value: 1 },
-          { label: '有点不认同', value: 2 },
-          { label: '有点认同', value: 3 },
-          { label: '完全认同', value: 4 }
+          { label: '完全不认同', labelEn: 'Strongly Disagree', value: 1 },
+          { label: '有点不认同', labelEn: 'Somewhat Disagree', value: 2 },
+          { label: '有点认同', labelEn: 'Somewhat Agree', value: 3 },
+          { label: '完全认同', labelEn: 'Strongly Agree', value: 4 }
         ]
       },
       {
         id: 'q17', dim: 'WLD',
         text: '面对强大的对手，我会更加兴奋，展现出野性的一面',
+        textEn: 'Faced with powerful opponents, I become more excited and show my wild side.',
         options: [
-          { label: '完全不认同', value: 1 },
-          { label: '有点不认同', value: 2 },
-          { label: '有点认同', value: 3 },
-          { label: '完全认同', value: 4 }
+          { label: '完全不认同', labelEn: 'Strongly Disagree', value: 1 },
+          { label: '有点不认同', labelEn: 'Somewhat Disagree', value: 2 },
+          { label: '有点认同', labelEn: 'Somewhat Agree', value: 3 },
+          { label: '完全认同', labelEn: 'Strongly Agree', value: 4 }
         ]
       },
-      // 生活作风态度相关问题（2）
       {
         id: 'q18', dim: 'WLD',
         text: '我喜欢向外输出自我，不在乎别人对我的看法！',
+        textEn: 'I like to express myself outwardly and don\'t care what others think of me!',
         options: [
-          { label: '完全不认同', value: 1 },
-          { label: '有点不认同', value: 2 },
-          { label: '有点认同', value: 3 },
-          { label: '完全认同', value: 4 }
+          { label: '完全不认同', labelEn: 'Strongly Disagree', value: 1 },
+          { label: '有点不认同', labelEn: 'Somewhat Disagree', value: 2 },
+          { label: '有点认同', labelEn: 'Somewhat Agree', value: 3 },
+          { label: '完全认同', labelEn: 'Strongly Agree', value: 4 }
         ]
       },
-
       {
         id: 'q22', dim: 'CON',
         text: '我认为几乎所有人都会爱我',
+        textEn: 'I believe almost everyone will love me.',
         options: [
-          { label: '完全不认同', value: 1 },
-          { label: '有点不认同', value: 2 },
-          { label: '有点认同', value: 3 },
-          { label: '完全认同', value: 4 }
+          { label: '完全不认同', labelEn: 'Strongly Disagree', value: 1 },
+          { label: '有点不认同', labelEn: 'Somewhat Disagree', value: 2 },
+          { label: '有点认同', labelEn: 'Somewhat Agree', value: 3 },
+          { label: '完全认同', labelEn: 'Strongly Agree', value: 4 }
         ]
       },
       {
         id: 'q23', dim: 'CON',
         text: '当我决定要做一件事时，就不会轻易放弃，即使许多人都认为我不能做到',
+        textEn: 'When I decide to do something, I won\'t give up easily, even if many people think I can\'t do it.',
         options: [
-          { label: '完全不认同', value: 1 },
-          { label: '有点不认同', value: 2 },
-          { label: '有点认同', value: 3 },
-          { label: '完全认同', value: 4 }
+          { label: '完全不认同', labelEn: 'Strongly Disagree', value: 1 },
+          { label: '有点不认同', labelEn: 'Somewhat Disagree', value: 2 },
+          { label: '有点认同', labelEn: 'Somewhat Agree', value: 3 },
+          { label: '完全认同', labelEn: 'Strongly Agree', value: 4 }
         ]
       },
-      // 生活作风态度相关问题（4）
       {
         id: 'q24', dim: 'CON',
         text: '我和别人交谈时总是落落大方，不会唯唯诺诺吞吞吐吐',
+        textEn: 'When I talk with others, I am always bold and natural, not timid or hesitant.',
         options: [
-          { label: '完全不认同', value: 1 },
-          { label: '有点不认同', value: 2 },
-          { label: '有点认同', value: 3 },
-          { label: '完全认同', value: 4 }
+          { label: '完全不认同', labelEn: 'Strongly Disagree', value: 1 },
+          { label: '有点不认同', labelEn: 'Somewhat Disagree', value: 2 },
+          { label: '有点认同', labelEn: 'Somewhat Agree', value: 3 },
+          { label: '完全认同', labelEn: 'Strongly Agree', value: 4 }
         ]
       },
       {
         id: 'q25', dim: 'SRV',
         text: '我抗压能力很强',
+        textEn: 'I have strong stress resistance.',
         options: [
-          { label: '完全不认同', value: 1 },
-          { label: '有点不认同', value: 2 },
-          { label: '有点认同', value: 3 },
-          { label: '完全认同', value: 4 }
+          { label: '完全不认同', labelEn: 'Strongly Disagree', value: 1 },
+          { label: '有点不认同', labelEn: 'Somewhat Disagree', value: 2 },
+          { label: '有点认同', labelEn: 'Somewhat Agree', value: 3 },
+          { label: '完全认同', labelEn: 'Strongly Agree', value: 4 }
         ]
       },
       {
         id: 'q26', dim: 'SRV',
         text: '我能清楚的找到对方的弱点',
+        textEn: 'I can clearly find the opponent\'s weaknesses.',
         options: [
-          { label: '完全不认同', value: 1 },
-          { label: '有点不认同', value: 2 },
-          { label: '有点认同', value: 3 },
-          { label: '完全认同', value: 4 }
+          { label: '完全不认同', labelEn: 'Strongly Disagree', value: 1 },
+          { label: '有点不认同', labelEn: 'Somewhat Disagree', value: 2 },
+          { label: '有点认同', labelEn: 'Somewhat Agree', value: 3 },
+          { label: '完全认同', labelEn: 'Strongly Agree', value: 4 }
         ]
       },
       {
         id: 'q27', dim: 'SRV',
         text: '我喜欢在一开始就给别人下马威',
+        textEn: 'I like to intimidate others right from the start.',
         options: [
-          { label: '完全不认同', value: 1 },
-          { label: '有点不认同', value: 2 },
-          { label: '有点认同', value: 3 },
-          { label: '完全认同', value: 4 }
+          { label: '完全不认同', labelEn: 'Strongly Disagree', value: 1 },
+          { label: '有点不认同', labelEn: 'Somewhat Disagree', value: 2 },
+          { label: '有点认同', labelEn: 'Somewhat Agree', value: 3 },
+          { label: '完全认同', labelEn: 'Strongly Agree', value: 4 }
         ]
       },
       {
         id: 'q28', dim: 'RC',
         text: '我能专注做事，沉得住气，一点不浮躁',
+        textEn: 'I can focus on tasks, stay calm, and not be impatient at all.',
         options: [
-          { label: '完全不认同', value: 1 },
-          { label: '有点不认同', value: 2 },
-          { label: '有点认同', value: 3 },
-          { label: '完全认同', value: 4 }
+          { label: '完全不认同', labelEn: 'Strongly Disagree', value: 1 },
+          { label: '有点不认同', labelEn: 'Somewhat Disagree', value: 2 },
+          { label: '有点认同', labelEn: 'Somewhat Agree', value: 3 },
+          { label: '完全认同', labelEn: 'Strongly Agree', value: 4 }
         ]
       },
       {
         id: 'q29', dim: 'RC',
         text: '我擅长观察快速运动的物体的轨迹，并做出及时的反应',
+        textEn: 'I am good at observing the trajectory of fast-moving objects and making timely reactions.',
         options: [
-          { label: '完全不认同', value: 1 },
-          { label: '有点不认同', value: 2 },
-          { label: '有点认同', value: 3 },
-          { label: '完全认同', value: 4 }
+          { label: '完全不认同', labelEn: 'Strongly Disagree', value: 1 },
+          { label: '有点不认同', labelEn: 'Somewhat Disagree', value: 2 },
+          { label: '有点认同', labelEn: 'Somewhat Agree', value: 3 },
+          { label: '完全认同', labelEn: 'Strongly Agree', value: 4 }
         ]
       },
       {
         id: 'q30', dim: 'RC',
         text: '我喜欢日复一日的锻炼基本功',
+        textEn: 'I like to practice basic skills day after day.',
         options: [
-          { label: '完全不认同', value: 1 },
-          { label: '有点不认同', value: 2 },
-          { label: '有点认同', value: 3 },
-          { label: '完全认同', value: 4 }
+          { label: '完全不认同', labelEn: 'Strongly Disagree', value: 1 },
+          { label: '有点不认同', labelEn: 'Somewhat Disagree', value: 2 },
+          { label: '有点认同', labelEn: 'Somewhat Agree', value: 3 },
+          { label: '完全认同', labelEn: 'Strongly Agree', value: 4 }
         ]
       },
       {
         id: 'q31', dim: 'PAS',
         text: '我擅长玩弄敌人的心理',
+        textEn: 'I am good at playing with the enemy\'s psychology.',
         options: [
-          { label: '完全不认同', value: 1 },
-          { label: '有点不认同', value: 2 },
-          { label: '有点认同', value: 3 },
-          { label: '完全认同', value: 4 }
+          { label: '完全不认同', labelEn: 'Strongly Disagree', value: 1 },
+          { label: '有点不认同', labelEn: 'Somewhat Disagree', value: 2 },
+          { label: '有点认同', labelEn: 'Somewhat Agree', value: 3 },
+          { label: '完全认同', labelEn: 'Strongly Agree', value: 4 }
         ]
       },
       {
         id: 'q32', dim: 'PAS',
         text: '我能清楚的掌握局势，找到破解危机的策略',
+        textEn: 'I can clearly grasp the situation and find strategies to resolve crises.',
         options: [
-          { label: '完全不认同', value: 1 },
-          { label: '有点不认同', value: 2 },
-          { label: '有点认同', value: 3 },
-          { label: '完全认同', value: 4 }
+          { label: '完全不认同', labelEn: 'Strongly Disagree', value: 1 },
+          { label: '有点不认同', labelEn: 'Somewhat Disagree', value: 2 },
+          { label: '有点认同', labelEn: 'Somewhat Agree', value: 3 },
+          { label: '完全认同', labelEn: 'Strongly Agree', value: 4 }
         ]
       },
       {
         id: 'q33', dim: 'PAS',
         text: '我能熟悉团队中每个人的特点和偏好，能够知人善用',
+        textEn: 'I am familiar with each person\'s characteristics and preferences in the team, and can assign tasks according to their abilities.',
         options: [
-          { label: '完全不认同', value: 1 },
-          { label: '有点不认同', value: 2 },
-          { label: '有点认同', value: 3 },
-          { label: '完全认同', value: 4 }
+          { label: '完全不认同', labelEn: 'Strongly Disagree', value: 1 },
+          { label: '有点不认同', labelEn: 'Somewhat Disagree', value: 2 },
+          { label: '有点认同', labelEn: 'Somewhat Agree', value: 3 },
+          { label: '完全认同', labelEn: 'Strongly Agree', value: 4 }
         ]
       }
     ];
@@ -1225,11 +1267,12 @@
         special: true,
         kind: 'volleyball_gate',
         text: '你平时会观看排球比赛吗？',
+        textEn: 'Do you usually watch volleyball matches?',
         options: [
-          { label: '从不看', value: 1 },
-          { label: '偶尔看', value: 2 },
-          { label: '经常看', value: 3 },
-          { label: '每场必看', value: 4 }
+          { label: '从不看', labelEn: 'Never watch', value: 1 },
+          { label: '偶尔看', labelEn: 'Occasionally', value: 2 },
+          { label: '经常看', labelEn: 'Often', value: 3 },
+          { label: '每场必看', labelEn: 'Watch every match', value: 4 }
         ]
       }
     ];
@@ -1240,133 +1283,176 @@
     "code": "HINATA",
     "cn": "日向翔阳",
     "intro": "就算身高受限，我也要站上排球的巅峰，成为无人能挡的王牌！",
-    "desc": "你骨子里藏着摧枯拉朽的进攻欲，小小的身躯里爆发着极致的进攻力量，天生带着滚烫的阳光气场，走到哪里都能照亮队友、点燃赛场，骨子里的野性让你从不畏惧任何强敌，哪怕面对巅峰强者也敢纵身起跳；你有着不容动摇的自信，从不会因身高短板自我否定，即便理性判断不足，也凭着一腔热爱拼尽全场，存在感强到哪怕站在角落也能成为全场焦点；虽天赋不算天花板级别，却把自身优势发挥到极致，发球能力不算突出，一传能稳稳完成团队衔接，传球并非强项，却始终用最纯粹的进攻欲，撑起属于自己的球场光芒，领导力藏在热血感染里，默默带动身边每一个人向前。"
+    "desc": "你骨子里藏着摧枯拉朽的进攻欲，小小的身躯里爆发着极致的进攻力量，天生带着滚烫的阳光气场，走到哪里都能照亮队友、点燃赛场，骨子里的野性让你从不畏惧任何强敌，哪怕面对巅峰强者也敢纵身起跳；你有着不容动摇的自信，从不会因身高短板自我否定，即便理性判断不足，也凭着一腔热爱拼尽全场，存在感强到哪怕站在角落也能成为全场焦点；虽天赋不算天花板级别，却把自身优势发挥到极致，发球能力不算突出，一传能稳稳完成团队衔接，传球并非强项，却始终用最纯粹的进攻欲，撑起属于自己的球场光芒，领导力藏在热血感染里，默默带动身边每一个人向前。",
+    "descEn": "You have an overwhelming desire to attack, with explosive power despite your small stature. Your sunny aura lights up teammates and ignites the court. Your wild nature fears no strong opponent, even daring to jump against the strongest. You have unwavering confidence, never doubting yourself despite your height disadvantage. Your presence is so strong even standing in a corner makes you the center of attention. Though not ceiling-level talented, you maximize your advantages - solid passing connection, though serving and passing aren't your strengths. You drive everyone forward through passionate inspiration."
   },
   "KAGEYAMA": {
     "code": "KAGEYAMA",
     "cn": "影山飞雄",
     "intro": "我要成为最完美的二传，带领队伍拿下胜利！",
-    "desc": "你是天生的球场强者，顶尖天赋刻进骨髓，极致的理性让你能精准把控每一刻球场局势，进攻手段凌厉且极具杀伤力，发球与快攻配合堪称无解；你自带不容置疑的强大自信，传球能力登峰造极，是全队最核心的战术枢纽，一传稳健扎实，能完美承接每一次来球；身上藏着不服输的野性，赛场之上气场全开，存在感拉满，用实力牢牢掌控球场节奏，自带强势的领导力，带领队伍向着胜利前行；阳光气场偏于内敛，从不擅长流露温柔，却把所有专注都放在排球与团队上，用极致的实力与执念，诠释着对胜利的渴望。"
+    "desc": "你是天生的球场强者，顶尖天赋刻进骨髓，极致的理性让你能精准把控每一刻球场局势，进攻手段凌厉且极具杀伤力，发球与快攻配合堪称无解；你自带不容置疑的强大自信，传球能力登峰造极，是全队最核心的战术枢纽，一传稳健扎实，能完美承接每一次来球；身上藏着不服输的野性，赛场之上气场全开，存在感拉满，用实力牢牢掌控球场节奏，自带强势的领导力，带领队伍向着胜利前行；阳光气场偏于内敛，从不擅长流露温柔，却把所有专注都放在排球与团队上，用极致的实力与执念，诠释着对胜利的渴望。",
+    "descEn": "You are a natural court powerhouse with elite talent ingrained in your bones. Your extreme rationality lets you precisely control every moment of the game. Your attacking moves are fierce and lethal, with serves and quick attacks almost unbeatable. You possess unquestionable confidence, pinnacle setting skills as the team's core tactical hub, and solid receiving. Your undefeated wildness takes over the court. Your presence fills the space as you control the game's rhythm with overwhelming leadership. Reserved in showing warmth, you channel all focus into volleyball and the team."
   },
   "OIKAWA": {
     "code": "OIKAWA",
     "cn": "及川彻",
     "intro": "才能是可以栽培开花的，灵感是可以研磨雕琢的",
-    "desc": "你有着出众的排球天赋，却从不止步于天赋，用百倍努力打磨出顶尖的发球与传球能力，理性又细腻的头脑让你总能洞察对手、读懂队友，进攻打法灵活多变，游刃有余掌控全场；你自带满分的领袖气质，领导力穿透全场，能稳稳凝聚全队力量，阳光又亲和的气场，让所有人都愿意追随，恰到好处的野性藏在胜负欲里，从不盲目冲动，却始终向着胜利全力奔赴；极致的自信藏在每一次从容传球里，存在感无需刻意彰显便耀眼夺目，一传稳定靠谱，是队伍最安心的后排保障，把温柔与担当藏在细节里，做团队最可靠的核心。"
+    "desc": "你有着出众的排球天赋，却从不止步于天赋，用百倍努力打磨出顶尖的发球与传球能力，理性又细腻的头脑让你总能洞察对手、读懂队友，进攻打法灵活多变，游刃有余掌控全场；你自带满分的领袖气质，领导力穿透全场，能稳稳凝聚全队力量，阳光又亲和的气场，让所有人都愿意追随，恰到好处的野性藏在胜负欲里，从不盲目冲动，却始终向着胜利全力奔赴；极致的自信藏在每一次从容传球里，存在感无需刻意彰显便耀眼夺目，一传稳定靠谱，是队伍最安心的后排保障，把温柔与担当藏在细节里，做团队最可靠的核心。",
+    "descEn": "You have outstanding volleyball talent but never rest on it, polishing your serve and set skills through immense effort. Your rational, detailed mind lets you read opponents and understand teammates. Your attack style is flexible, controlling the court with ease. You have perfect leadership qualities, uniting the team with your sunny, approachable aura that makes everyone want to follow you. Your wildness is perfectly balanced with competitive desire - never reckless, always pursuing victory. Confidence shines through every composed set. Your reliable receiving makes you the team's most reassuring defender."
   },
   "SUGAWARA": {
     "code": "SUGAWARA",
     "cn": "菅原孝支",
     "intro": "别怕，我永远在身后，接住每一个失误，守护每一份热爱。",
-    "desc": "你性格温润平和，没有凌厉的进攻锋芒，进攻能力偏向沉稳衔接，骨子里几乎没有张扬的野性，却有着最治愈的阳光气场，用温柔抚平队友所有焦虑；你有着超凡的领导力，是全队最坚实的精神支柱，理性又沉稳，哪怕赛场慌乱也能稳住军心，自信从容且清醒，从不争抢锋芒，存在感温和却不可或缺；天赋不算顶尖，却靠日复一日的努力，练就了稳健的发球、出色的一传与细腻的传球能力，默默守护着团队的每一次配合，用包容与耐心，成为所有人心中最安心的依靠。"
+    "desc": "你性格温润平和，没有凌厉的进攻锋芒，进攻能力偏向沉稳衔接，骨子里几乎没有张扬的野性，却有着最治愈的阳光气场，用温柔抚平队友所有焦虑；你有着超凡的领导力，是全队最坚实的精神支柱，理性又沉稳，哪怕赛场慌乱也能稳住军心，自信从容且清醒，从不争抢锋芒，存在感温和却不可或缺；天赋不算顶尖，却靠日复一日的努力，练就了稳健的发球、出色的一传与细腻的传球能力，默默守护着团队的每一次配合，用包容与耐心，成为所有人心中最安心的依靠。",
+    "descEn": "You have a gentle, peaceful nature without aggressive offensive presence. Your attacking leans toward steady connection with almost no flamboyant wildness, but you have the most healing sunny aura, soothing all teammates' anxieties. You possess extraordinary leadership as the team's solid spiritual pillar, staying rational and calm even in chaos. Confident, composed, and clear-headed, you never seek the spotlight. Your presence is warm but indispensable. Though not top-tier talented, your daily effort honed steady serving, excellent receiving, and delicate passing, making you everyone's most reassuring anchor."
   },
   "TSUKISHIMA": {
     "code": "TSUKISHIMA",
     "cn": "月岛萤",
     "intro": "排球可不是靠气势就能赢的。",
-    "desc": "你是球场之上最清醒的存在，理性值拉满，从不被热血冲昏头脑，用智慧布局每一次进攻与防守，进攻打法刁钻且极具技巧性；你性格冷淡内敛，阳光气场偏弱，几乎没有肆意的野性，习惯独善其身，领导力并不突出，存在感低调却总能在关键时刻发力；有着出众的排球天赋，自信内敛又笃定，从不盲目张扬，发球以战术取胜，一传与传球能稳稳完成基础衔接，从不用浮夸的表现证明自己，却用冷静与实力，成为团队不可或缺的防线。"
+    "desc": "你是球场之上最清醒的存在，理性值拉满，从不被热血冲昏头脑，用智慧布局每一次进攻与防守，进攻打法刁钻且极具技巧性；你性格冷淡内敛，阳光气场偏弱，几乎没有肆意的野性，习惯独善其身，领导力并不突出，存在感低调却总能在关键时刻发力；有着出众的排球天赋，自信内敛又笃定，从不盲目张扬，发球以战术取胜，一传与传球能稳稳完成基础衔接，从不用浮夸的表现证明自己，却用冷静与实力，成为团队不可或缺的防线。",
+    "descEn": "You are the most level-headed presence on court. Your rationality is maxed, never getting caught up in热血. You use wisdom to plan every attack and defense with clever, technical plays. Cold and introverted with low sunny aura, almost no flamboyant wildness. You prefer keeping to yourself with unremarkable leadership. Your presence is low-key but always steps up at crucial moments. Having outstanding talent, you're confidently reserved and never showboating. Your serves win through tactics. Receiving and passing complete foundational connection. You become an indispensable team防线 through calm competence rather than flashy displays."
   },
   "TANAKA": {
     "code": "TANAKA",
     "cn": "田中龙之介",
     "intro": "男子汉就要堂堂正正地扣球！",
-    "desc": "你浑身充斥着最纯粹的热血，进攻爆发力极强，扣球凌厉果敢，骨子里的野性毫无保留，赛场之上永远敢打敢拼、一往无前；你有着炽热的阳光气场，是全队的气氛担当，直白又坚定的自信，让你从不畏惧任何挑战，存在感亮眼十足；理性判断偏弱，行事全凭一腔赤诚与热血，领导力藏在热血拼搏里，天赋不算出众，却靠全力拼搏弥补短板，发球力量十足，一传稳健扎实，传球偏向基础配合，把所有的忠诚与热血，都献给团队与伙伴。"
+    "desc": "你浑身充斥着最纯粹的热血，进攻爆发力极强，扣球凌厉果敢，骨子里的野性毫无保留，赛场之上永远敢打敢拼、一往无前；你有着炽热的阳光气场，是全队的气氛担当，直白又坚定的自信，让你从不畏惧任何挑战，存在感亮眼十足；理性判断偏弱，行事全凭一腔赤诚与热血，领导力藏在热血拼搏里，天赋不算出众，却靠全力拼搏弥补短板，发球力量十足，一传稳健扎实，传球偏向基础配合，把所有的忠诚与热血，都献给团队与伙伴。",
+    "descEn": "You are filled with the purest passion. Extremely strong offensive bursts with decisive, powerful spikes. Your wildness is unleashed without reservation, always charging forward敢打敢拼 on court. Your hot sunny aura makes you the team's atmosphere maker. Your straightforward confidence means you never fear challenges, shining brightly. Weak rational judgment, acting purely on赤诚 and passion. Leadership hidden in energetic fighting. Not particularly talented but compensates through full-out effort. Powerful serves, steady receiving, basic passing. You dedicate all loyalty and passion to the team and companions."
   },
   "NISHINOYA": {
     "code": "NISHINOYA",
     "cn": "西谷夕",
     "intro": "我是乌野的守护神，绝不会让球落地！",
-    "desc": "你全身心扎根后排防守，进攻能力并不突出，却有着顶级的一传能力，用尽全力守住队伍最后一道防线，传球灵活衔接，发球虽不算亮眼，却始终坚守自身职责；你是全场最耀眼的小太阳，阳光气场直接拉满，骨子里的野性让你奋不顾身、无所畏惧，自信又张扬，坚信自己能守住每一颗球；领导力温和却有力量，用坚守给队友满满底气，天赋独特且极致发挥，存在感爆棚，小小的身躯却撑起全队的防守底气，默默守护着团队的每一份希望。"
+    "desc": "你全身心扎根后排防守，进攻能力并不突出，却有着顶级的一传能力，用尽全力守住队伍最后一道防线，传球灵活衔接，发球虽不算亮眼，却始终坚守自身职责；你是全场最耀眼的小太阳，阳光气场直接拉满，骨子里的野性让你奋不顾身、无所畏惧，自信又张扬，坚信自己能守住每一颗球；领导力温和却有力量，用坚守给队友满满底气，天赋独特且极致发挥，存在感爆棚，小小的身躯却撑起全队的防守底气，默默守护着团队的每一份希望。",
+    "descEn": "You root yourself in back-row defense. Not prominent in attack but have top-tier receiving skills, giving your all to guard the team's last line. Flexible passing connections, though serving isn't flashy but always reliable. You are the most dazzling little sun on court, with maxed sunny aura. Your wildness makes you fearless and selfless. Confident and bold, believing you can save every ball. Gentle but powerful leadership, providing teammates with confidence through dedication. Your unique talent maximizes itself. Despite your small stature, you hold up the entire team's defensive backbone."
   },
   "KOSHI": {
     "code": "KOSHI",
     "cn": "孤爪研磨",
     "intro": "排球的意义，从来都是和重要的人一起。",
-    "desc": "你内敛安静，不喜喧嚣，有着顶尖的排球天赋，理性又细腻，总能精准观察球场全局，进攻打法巧妙灵动，从不靠激进拼搏取胜；你阳光气场内敛，几乎没有张扬的野性，领导力偏弱，习惯配合而非主导，自信平和又淡然，存在感低调却实力不俗；发球精准且极具战术性，一传稳健无破绽，传球细腻又契合队友节奏，从不在意赛场目光，只把温柔留给在意的伙伴，在排球里找到属于自己的温柔坚守。"
+    "desc": "你内敛安静，不喜喧嚣，有着顶尖的排球天赋，理性又细腻，总能精准观察球场全局，进攻打法巧妙灵动，从不靠激进拼搏取胜；你阳光气场内敛，几乎没有张扬的野性，领导力偏弱，习惯配合而非主导，自信平和又淡然，存在感低调却实力不俗；发球精准且极具战术性，一传稳健无破绽，传球细腻又契合队友节奏，从不在意赛场目光，只把温柔留给在意的伙伴，在排球里找到属于自己的温柔坚守。",
+    "descEn": "You are introverted and quiet, disliking noise. Have top-tier volleyball talent with rational, detailed observation of the entire court. Your attack style is clever and agile, never winning through radical struggle. Reserved sunny aura, almost no flamboyant wildness. Weak leadership, used to cooperating rather than leading. Calm,淡然 confidence with low-key presence but considerable skill. Precise, tactical serving. Steady, flawless receiving. Delicate passing matching teammates' rhythm. Never caring about court attention, saving warmth for important companions. Finding your own gentle persistence in volleyball."
   },
   "KUROO": {
     "code": "KUROO",
     "cn": "黑尾铁朗",
     "intro": "身为队长，我定会带领全队，走向更远的地方。",
-    "desc": "你是天生的领导者，领导力拉满，成熟又有谋略，极致的理性让你能精准把控赛场局势，进攻强势凌厉，拦网与快攻配合极具杀伤力；你有着优秀的排球天赋，自信从容又沉稳，阳光气场踏实可靠，野性适中，赛场之上果断却不莽撞，存在感极强，队长气场笼罩全场；发球、一传、传球三项技能全面且出色，前后排衔接毫无短板，用实力与担当，成为全队最坚实的依靠，让所有队友都能放心追随。"
+    "desc": "你是天生的领导者，领导力拉满，成熟又有谋略，极致的理性让你能精准把控赛场局势，进攻强势凌厉，拦网与快攻配合极具杀伤力；你有着优秀的排球天赋，自信从容又沉稳，阳光气场踏实可靠，野性适中，赛场之上果断却不莽撞，存在感极强，队长气场笼罩全场；发球、一传、传球三项技能全面且出色，前后排衔接毫无短板，用实力与担当，成为全队最坚实的依靠，让所有队友都能放心追随。",
+    "descEn": "You are a natural leader with maxed leadership, mature and strategic. Extreme rationality lets you precisely control game situations. Aggressive, powerful attacks with lethal block-quick attack coordination. Have excellent volleyball talent, confident, composed, and steady. Reliable, practical sunny aura with moderate wildness. Decisive but not reckless on court. Extremely strong presence with captain's aura filling the space. All-round serving, receiving, and passing skills with seamless front-back connection. Become the team's most solid reliance through competence and responsibility, letting all teammates follow with peace of mind."
   },
   "IWAIZUMI": {
     "code": "IWAIZUMI",
     "cn": "岩泉一",
     "intro": "别太得意忘形了。",
-    "desc": "你行事踏实沉稳，进攻扎实且效率极高，骨子里藏着不张扬的野性，赛场之上拼搏有力却从不莽撞，理性在线，判断精准从不失误；你有着内敛的领导力，从不用言语指挥，却用行动带动全队，阳光气场踏实温暖，自信坚定又脚踏实地，天赋中上却靠努力打磨出顶尖实力，存在感可靠又安心；发球稳健、一传出色、传球扎实，三项技能全面均衡，从不用华丽表达彰显心意，却用默默付出与坚守，成为身边人最靠谱的后盾。"
+    "desc": "你行事踏实沉稳，进攻扎实且效率极高，骨子里藏着不张扬的野性，赛场之上拼搏有力却从不莽撞，理性在线，判断精准从不失误；你有着内敛的领导力，从不用言语指挥，却用行动带动全队，阳光气场踏实温暖，自信坚定又脚踏实地，天赋中上却靠努力打磨出顶尖实力，存在感可靠又安心；发球稳健、一传出色、传球扎实，三项技能全面均衡，从不用华丽表达彰显心意，却用默默付出与坚守，成为身边人最靠谱的后盾。",
+    "descEn": "You are steady and solid in actions, with highly efficient, reliable attacks. Your restrained wildness shows in powerful but never reckless fighting. Rational and precise, never making mistakes. Reserved leadership, driving the team through actions not words. Practical, warm sunny aura. Confident, determined, and grounded. Above-average talent polished into top-level skill through effort. Reliable, reassuring presence. Steady serves, excellent receiving, solid passing - balanced, comprehensive skills. Become the most dependable backbone for those around you through silent dedication and persistence, not flashy expressions."
   },
   "USHIJIMA": {
     "code": "USHIJIMA",
     "cn": "牛岛若利",
     "intro": "强者，就是正确的。",
-    "desc": "你是排球场上绝对的强者，进攻能力登峰造极，天赋堪称天花板级别，理性又纯粹，对胜利有着不容动摇的执着，自信到极致，从不怀疑自身实力；你性格直接坦荡，领导力强势且直接，阳光气场偏弱，不懂世俗圆滑，野性十足且锋芒毕露，存在感拉满，走到哪里都是全场瞩目的焦点；发球、一传、传球能力均属顶尖，各项技能无懈可击，用最纯粹的强大，诠释着对排球的专一热爱，带领队伍全力奔赴胜利。"
+    "desc": "你是排球场上绝对的强者，进攻能力登峰造极，天赋堪称天花板级别，理性又纯粹，对胜利有着不容动摇的执着，自信到极致，从不怀疑自身实力；你性格直接坦荡，领导力强势且直接，阳光气场偏弱，不懂世俗圆滑，野性十足且锋芒毕露，存在感拉满，走到哪里都是全场瞩目的焦点；发球、一传、传球能力均属顶尖，各项技能无懈可击，用最纯粹的强大，诠释着对排球的专一热爱，带领队伍全力奔赴胜利。",
+    "descEn": "You are the absolute powerhouse of the volleyball court. Peak-level attacking ability with ceiling-level talent. Pure rationality with unwavering dedication to victory. Ultimate confidence, never doubting your own strength. Direct and straightforward personality. Strong, direct leadership. Low sunny aura, not skilled in worldly matters. Full wildness with blazing edge. Maxed presence, always the focal point wherever you go. Top-tier serving, receiving, and passing with flawless skills. Interpret pure love for volleyball through sheer strength, leading the team全力以赴 toward victory."
   },
   "TENDO": {
     "code": "TENDO",
     "cn": "天童觉",
     "intro": "拦网是我的快乐。",
-    "desc": "你有着灵动出众的排球天赋，进攻与拦网全凭灵感与热爱，理性判断随性却精准，骨子里的野性肆意又鲜活，阳光气场开朗热烈，总能用独特的方式活跃全场气氛；你自信又洒脱，领导力偏弱，却能用快乐感染队友，存在感鲜明又独特，从不在意刻板规则，只遵从自己对排球的热爱；发球、一传、传球均保持中上水准，技能全面不拖后腿，用独一份的灵动与热情，成为团队里最特别的力量。"
+    "desc": "你有着灵动出众的排球天赋，进攻与拦网全凭灵感与热爱，理性判断随性却精准，骨子里的野性肆意又鲜活，阳光气场开朗热烈，总能用独特的方式活跃全场气氛；你自信又洒脱，领导力偏弱，却能用快乐感染队友，存在感鲜明又独特，从不在意刻板规则，只遵从自己对排球的热爱；发球、一传、传球均保持中上水准，技能全面不拖后腿，用独一份的灵动与热情，成为团队里最特别的力量。",
+    "descEn": "You have agile, outstanding volleyball talent. Attack and block come from inspiration and love. Random yet precise rational judgment. Your wildness is carefree and vivid. Bright, enthusiastic sunny aura always livens up the entire court atmosphere in unique ways. Confident and free-spirited. Weak leadership but infect teammates with happiness. Distinctive, unique presence. Never caring about rigid rules, only following your love for volleyball. Serve, receive, and pass at above-average levels with comprehensive skills. Become the team's most special force through unique agility and passion."
   },
   "HOSHI": {
     "code": "HOSHI",
     "cn": "星海光来",
     "intro": "小个子也能成为最强王牌！",
-    "desc": "你和日向有着同样的执念，进攻欲与进攻爆发力拉满，骨子里的野性丝毫不输任何人，从不因身高局限放弃，自信坚定且光芒万丈；你有着出色的排球天赋，阳光气场炽热耀眼，理性适中，拼搏却不失判断，领导力温和，用努力带动身边人，存在感十足，小个子也能成为全场焦点；发球、一传、传球能力均衡在线，技能扎实不薄弱，用永不言弃的拼搏，打破所有偏见，活成自己的王牌。"
+    "desc": "你和日向有着同样的执念，进攻欲与进攻爆发力拉满，骨子里的野性丝毫不输任何人，从不因身高局限放弃，自信坚定且光芒万丈；你有着出色的排球天赋，阳光气场炽热耀眼，理性适中，拼搏却不失判断，领导力温和，用努力带动身边人，存在感十足，小个子也能成为全场焦点；发球、一传、传球能力均衡在线，技能扎实不薄弱，用永不言弃的拼搏，打破所有偏见，活成自己的王牌。",
+    "descEn": "You share the same执念 as Hinata - maxed attack desire and explosive power. Your wildness matches anyone, never giving up due to height. Confident, determined, and radiant. Excellent volleyball talent with brilliant, dazzling sunny aura. Moderate rationality, fighting but not losing judgment. Gentle leadership driving others through effort. Strong presence despite small stature, becoming the whole court's focal point. Balanced serving, receiving, and passing with solid, non-weak skills. Break all prejudices through relentless fighting, living as your own ace."
   },
   "MIYAATSU": {
     "code": "MIYAATSU",
     "cn": "宫治",
     "intro": "比起排球，我更喜欢吃饭",
-    "desc": "你性格沉稳内敛，进攻实力强劲却从不张扬，理性拉满，行事始终遵从自己的节奏，阳光气场平和淡然，毫无张扬的野性，从不追求虚名与目光；你领导力低调，自信沉稳且清醒，天赋出众却低调打磨实力，存在感平淡却不容忽视，发球、一传、传球技能顶尖，却始终专注排球本身，不骄不躁，用实力默默为团队贡献力量。"
+    "desc": "你性格沉稳内敛，进攻实力强劲却从不张扬，理性拉满，行事始终遵从自己的节奏，阳光气场平和淡然，毫无张扬的野性，从不追求虚名与目光；你领导力低调，自信沉稳且清醒，天赋出众却低调打磨实力，存在感平淡却不容忽视，发球、一传、传球技能顶尖，却始终专注排球本身，不骄不躁，用实力默默为团队贡献力量。",
+    "descEn": "You have a calm, introverted personality with strong offensive skills but never flashy about it. Maxed rationality, always following your own rhythm. Peaceful, calm sunny aura with no flamboyant wildness. Never pursuing false fame or attention. Low-key leadership with composed, clear-headed confidence. Talented but quietly refining skills. Plain presence but not to be ignored. Top-tier serving, receiving, and passing skills. Always focused on volleyball itself, remaining steady and unruffled, contributing to the team through quiet competence."
   },
   "MIYASATSU": {
     "code": "MIYASATSU",
     "cn": "宫侑",
     "intro": "我，就是最强的二传！",
-    "desc": "你自信张扬到极致，身为二传，传球能力冠绝全场，进攻手段凌厉多变，发球能力顶尖且极具统治力，一传稳健扎实，三项技能毫无短板；你有着天花板级别的排球天赋，理性又强势，领导力自带锋芒，阳光气场耀眼，野性十足且毫不掩饰自身强大，存在感拉满，赛场之上永远是绝对核心；用绝对的实力与底气，诠释着最强二传的骄傲，对胜利有着极致的渴望，从不掩饰自己的野心与强大。"
+    "desc": "你自信张扬到极致，身为二传，传球能力冠绝全场，进攻手段凌厉多变，发球能力顶尖且极具统治力，一传稳健扎实，三项技能毫无短板；你有着天花板级别的排球天赋，理性又强势，领导力自带锋芒，阳光气场耀眼，野性十足且毫不掩饰自身强大，存在感拉满，赛场之上永远是绝对核心；用绝对的实力与底气，诠释着最强二传的骄傲，对胜利有着极致的渴望，从不掩饰自己的野心与强大。",
+    "descEn": "You are confident to the extreme. As a setter, your setting ability is unrivaled. Fierce, versatile attacks with top-tier serving and dominant force. Solid receiving with no weaknesses in any of the three skills. Ceiling-level volleyball talent with strong rationality. Leadership with sharp edges and dazzling sunny aura. Full wildness without hiding your strength. Maximum presence, always the absolute core on court. Interpret the pride of the strongest setter through absolute skill and conviction. Have extreme desire for victory, never hiding your ambition and strength."
   },
   "BOKUTO": {
     "code": "BOKUTO",
     "cn": "木兔光太郎",
     "intro": "不愧是我！",
-    "desc": "你身为王牌，进攻能力顶尖炸裂，骨子里的野性肆意张扬，阳光气场满分，永远活力满满，用热血感染全场，领导力直白又热烈，能轻松带动全队斗志；你情绪直白，自信又纯粹，天赋出众，存在感极强，走到哪里都能点燃赛场氛围，理性适中，情绪直白从不掩饰，发球、一传、传球能力均属上乘，技能全面且亮眼，用最纯粹的热血与热爱，做全队最耀眼的活力源泉。"
+    "desc": "你身为王牌，进攻能力顶尖炸裂，骨子里的野性肆意张扬，阳光气场满分，永远活力满满，用热血感染全场，领导力直白又热烈，能轻松带动全队斗志；你情绪直白，自信又纯粹，天赋出众，存在感极强，走到哪里都能点燃赛场氛围，理性适中，情绪直白从不掩饰，发球、一传、传球能力均属上乘，技能全面且亮眼，用最纯粹的热血与热爱，做全队最耀眼的活力源泉。",
+    "descEn": "As an ace, your attacking ability is top-tier and explosive. Your wild nature displays freely. Maximum sunny aura, always energetic, infecting the whole court with passion. Direct, enthusiastic leadership that easily boosts team morale. Outspoken emotions, pure confidence, outstanding talent. Extremely strong presence, igniting court atmosphere wherever you go. Moderate rationality with openly expressed emotions. Above-average serving, receiving, and passing. Comprehensive, impressive skills. Be the most dazzling source of energy for the team through pure passion and love."
   },
   "AKAASHI": {
     "code": "AKAASHI",
     "cn": "赤苇京治",
     "intro": "冷静分析，掌控全场。",
-    "desc": "你智商超群，理性值拉满，是全队最靠谱的军师，总能冷静分析赛场局势，精准把控每一个细节，进攻打法沉稳且极具战术性；你性格温柔细腻，领导力沉稳又贴心，懂队友更懂团队节奏，阳光气场温润安心，野性内敛，从不激进莽撞，自信从容且缜密，存在感低调却让人无比安心；天赋优秀，发球、一传、传球技能全面且出色，用缜密的头脑与沉稳的担当，成为全队最坚实的底气。"
+    "desc": "你智商超群，理性值拉满，是全队最靠谱的军师，总能冷静分析赛场局势，精准把控每一个细节，进攻打法沉稳且极具战术性；你性格温柔细腻，领导力沉稳又贴心，懂队友更懂团队节奏，阳光气场温润安心，野性内敛，从不激进莽撞，自信从容且缜密，存在感低调却让人无比安心；天赋优秀，发球、一传、传球技能全面且出色，用缜密的头脑与沉稳的担当，成为全队最坚实的底气。",
+    "descEn": "You have superb intelligence with maxed rationality, being the team's most reliable strategist. Always calmly analyzing court situations and precisely controlling every detail. Gentle, detailed personality with steady, caring leadership. Understands teammates and team rhythm better than anyone. Warm, reassuring sunny aura with restrained wildness, never acting rashly. Composed, meticulous confidence. Low-key presence but makes everyone feel at ease. Excellent talent with comprehensive, outstanding serving, receiving, and passing skills. Become the team's most solid backbone through meticulous intelligence and steady responsibility."
   },
   "KITA": {
     "code": "KITA",
     "cn": "北信介",
     "intro": "平凡的日常，就是奇迹。",
-    "desc": "你沉稳自律到极致，理性刻进骨子里，进攻扎实沉稳，从不追求激进锋芒，阳光气场平和治愈，毫无张扬野性，却有着最坚韧的灵魂；你领导力润物无声，用一言一行影响全队，自信平和且坚定，天赋不算耀眼，却把每一项技能打磨到极致，发球、一传、传球稳定无失误，存在感平淡却不可或缺，用平凡的坚守与自律，铸就最不凡的团队力量。"
+    "desc": "你沉稳自律到极致，理性刻进骨子里，进攻扎实沉稳，从不追求激进锋芒，阳光气场平和治愈，毫无张扬野性，却有着最坚韧的灵魂；你领导力润物无声，用一言一行影响全队，自信平和且坚定，天赋不算耀眼，却把每一项技能打磨到极致，发球、一传、传球稳定无失误，存在感平淡却不可或缺，用平凡的坚守与自律，铸就最不凡的团队力量。",
+    "descEn": "You are the epitome of steadiness and self-discipline. Rationality ingrained in your bones. Steady, solid attacks without seeking aggressive edge. Peaceful, healing sunny aura with no flamboyant wildness but the toughest soul. Subtle leadership influencing the whole team through actions. Calm, balanced confidence. Not dazzling talent but polishing every skill to perfection. Serving, receiving, and passing are stable without error. Plain presence but indispensable. Build the most extraordinary team strength through ordinary persistence and self-discipline."
   },
   "DAICHI": {
     "code": "DAICHI",
     "cn": "泽村大地",
     "intro": "作为队长，我必须保护大家。",
-    "desc": "你身为队长，责任感爆棚，领导力沉稳且坚定，用担当凝聚全队力量，理性在线，赛场之上永远沉稳冷静，进攻扎实有力，防守坚不可摧；你有着踏实的阳光气场，自信坚定且靠谱，野性内敛，拼搏却不失稳重，存在感极强，是全队最坚实的后盾；天赋中等却靠努力练就全面技能，发球、一传、传球稳健靠谱，前后排衔接毫无破绽，用以身作则的坚守，守护着整支队伍的荣光。"
+    "desc": "你身为队长，责任感爆棚，领导力沉稳且坚定，用担当凝聚全队力量，理性在线，赛场之上永远沉稳冷静，进攻扎实有力，防守坚不可摧；你有着踏实的阳光气场，自信坚定且靠谱，野性内敛，拼搏却不失稳重，存在感极强，是全队最坚实的后盾；天赋中等却靠努力练就全面技能，发球、一传、传球稳健靠谱，前后排衔接毫无破绽，用以身作则的坚守，守护着整支队伍的荣光。",
+    "descEn": "As captain, your sense of responsibility explodes. Steadfast, determined leadership that unites the team through responsibility. Rational and always calm on court. Solid, powerful attacks with impenetrable defense. Practical sunny aura with confident, reliable presence. Restrained wildness, fighting but maintaining steadiness. Extremely strong presence as the team's most solid backbone. Average talent but developing all-round skills through effort. Reliable serving, receiving, and passing with seamless front-back connection. Protect the entire team's honor through dedicated example."
   },
   "YAMAGUCHI": {
     "code": "YAMAGUCHI",
     "cn": "山口忠",
     "intro": "我会努力追上大家的脚步。",
-    "desc": "你默默努力，从不轻言放弃，进攻能力稳步提升，理性适中，阳光气场温和纯粹，野性内敛，却有着不服输的韧劲，自信在一次次努力中慢慢沉淀；你领导力偏弱，存在感低调，天赋不算出众，却靠日复一日的练习，打磨出发球、一传、传球的扎实能力，从不因平凡而懈怠，用默默付出与坚持，一点点追上队友的脚步，为团队贡献自己的全部力量。"
+    "desc": "你默默努力，从不轻言放弃，进攻能力稳步提升，理性适中，阳光气场温和纯粹，野性内敛，却有着不服输的韧劲，自信在一次次努力中慢慢沉淀；你领导力偏弱，存在感低调，天赋不算出众，却靠日复一日的练习，打磨出发球、一传、传球的扎实能力，从不因平凡而懈怠，用默默付出与坚持，一点点追上队友的脚步，为团队贡献自己的全部力量。",
+    "descEn": "You work silently, never giving up easily. Steadily improving attack ability. Moderate rationality with gentle, pure sunny aura. Restrained wildness but refusing to accept defeat. Confidence slowly building through一次次 effort. Weak leadership with low-key presence. Not particularly talented but developing solid serving, receiving, and passing through daily practice. Never slacking due to ordinary abilities. Using silent dedication and persistence to slowly catch up with teammates, contributing all your strength to the team."
   },
   "AZUMA": {
     "code": "AZUMA",
     "cn": "东峰旭",
     "intro": "我要成为乌野的力量。",
-    "desc": "你外表沉默，内心却藏着火热的热爱与担当，进攻力量十足，是队伍前期的进攻核心，理性适中，曾陷入迷茫却终找回自信，阳光气场沉稳厚重，野性藏在进攻爆发力里；你领导力内敛，自信在队友的信任中重新绽放，存在感可靠，关键时刻总能挺身而出，天赋中上，发球、一传、传球能力扎实，用坚定的担当与拼搏，扛起属于乌野的力量，做团队最可靠的进攻支柱。"
+    "desc": "你外表沉默，内心却藏着火热的热爱与担当，进攻力量十足，是队伍前期的进攻核心，理性适中，曾陷入迷茫却终找回自信，阳光气场沉稳厚重，野性藏在进攻爆发力里；你领导力内敛，自信在队友的信任中重新绽放，存在感可靠，关键时刻总能挺身而出，天赋中上，发球、一传、传球能力扎实，用坚定的担当与拼搏，扛起属于乌野的力量，做团队最可靠的进攻支柱。",
+    "descEn": "You appear silent but harbor burning passion and responsibility. Full attacking power as the team's early offensive core. Moderate rationality, once lost but regaining confidence. Steady, substantial sunny aura with wildness hidden in explosive attacks. Reserved leadership with confidence re blooming through teammates' trust. Reliable presence stepping up at crucial moments. Above-average talent with solid serving, receiving, and passing skills. Shoulder Tobio's strength through determined responsibility and fighting, becoming the team's most reliable offensive pillar."
   },
   "KIYOMIZU": {
     "code": "KIYOMIZU",
     "cn": "清水洁子",
     "intro": "乌野的应援声是最强的武器！",
-    "desc": "你温柔又坚定，没有赛场之上的进攻锋芒，却有着最治愈的阳光气场，理性又沉稳，默默守护着排球部的每一个人，领导力藏在温柔的支撑里；你自信从容，存在感温和却不可或缺，骨子里藏着细腻的热爱，用坚定的应援与陪伴，给全队最温暖的力量，虽不直接参与技能对抗，却用自身的温柔与坚守，成为乌野排球部最动人的光，照亮每一位队员的前行路。"
+    "desc": "你温柔又坚定，没有赛场之上的进攻锋芒，却有着最治愈的阳光气场，理性又沉稳，默默守护着排球部的每一个人，领导力藏在温柔的支撑里；你自信从容，存在感温和却不可或缺，骨子里藏着细腻的热爱，用坚定的应援与陪伴，给全队最温暖的力量，虽不直接参与技能对抗，却用自身的温柔与坚守，成为乌野排球部最动人的光，照亮每一位队员的前行路。",
+    "descEn": "You are gentle yet determined. Without offensive presence on court, but have the most healing sunny aura. Rational and steady, silently protecting everyone in the volleyball club. Leadership hidden in gentle support. Confident and composed, warm yet indispensable presence. Having delicate passion in your bones, giving the team the warmest strength through firm support and companionship. Though not directly participating in skills, become Karasuno's most moving light through gentleness and persistence, illuminating every teammate's path forward."
+  },
+  "GOSHIKI": {
+    "code": "GOSHIKI",
+    "cn": "五色工",
+    "intro": "我要用进攻证明自己的存在！",
+    "desc": "天赋与赛场野性拉满的热血主攻，性格直率外放，元气少年感十足。进攻爆发力强劲、打法凌厉敢冲敢打，进攻冲击力极强；领导表现平平，没有统筹全队的格局与号召力，只适合跟着节奏冲锋，不具备带队控场的能力。理性偏弱，容易被赛场情绪带偏，冲动上头、临场思虑不够周全，偶尔会盲目进攻；阳光特质极高，性格开朗热忱、直白坦荡，待人毫无城府，元气感贯穿日常与赛场。天赋得天独厚，弹跳、球感、身体天赋都十分拔尖；野性直接拉满，赛场不受条条框框束缚，打法狂野奔放、冲击力十足；自信感很强，认定自己的实力，敢直面强敌不怯场。发球力道足、威胁性不错，具备稳定得分牵制力；一传能力中等，只能完成基础接球，应对高压一传容易不稳；传球是明显短板，几乎没有组织串联意识，只专注强攻，不擅长配合传球调度。",
+    "descEn": "A passionate spiker with maxed talent and wild court presence. Outgoing and straightforward with youthful energy. Powerful offensive bursts and aggressive playstyle; mediocre leadership, only suitable for following节奏冲锋 without commanding ability. Weak rationality, easily swayed by emotions, occasional blind attacks. Extremely high positivity, cheerful and straightforward. Outstanding natural talent in jumping, ball sense, and physical abilities. Full wildness, unconstrained playstyle. Strong confidence, daring to face strong opponents. Solid serving power with stable scoring threat. Average receiving, unstable under pressure. Passing is a obvious weakness, no sense for combination play."
+  },
+  "SUNA": {
+    "code": "SUNA",
+    "cn": "角名伦太郎",
+    "intro": "冷静，是我最大的武器。",
+    "desc": "清冷腹黑的谋略型球场观察者，靠脑子打球，自带松弛疏离感。进攻不靠蛮力，擅长刁钻落点、战术偷袭，巧劲大于硬实力；领导欲望和能力都普通，不爱站出来统筹带队，习惯隐身旁观，不会主动凝聚团队、指挥节奏。理性全场顶尖，心思缜密冷静，擅长拆解对手套路、捕捉漏洞，永远先算计再行动；阳光偏低，性格内敛冷淡，不爱热闹社交，气场清冷寡淡，没什么外放的亲和力。天赋集中在超高球商与洞察力上，临场变通天赋出众；野性内敛克制，不张扬狂野，只在关键时刻用狡黠球路打出出其不意的突破；自信内敛不浮夸，不高调张扬，但对自己的判断和战术选择十分笃定。发球精准控点见长，擅长瞄准空档施压，稳定性极佳；一传细腻稳健，接球判断精准、失误极少，是队内可靠的一传点位；传球造诣极高，战术视野开阔，隐蔽传球、联动配合都炉火纯青，是顶级战术串联者。",
+    "descEn": "A cold, calculating court observer who plays with intelligence. Has a relaxed, aloof aura. Doesn't rely on brute force, excels at tricky placements and tactical surprise attacks. Average leadership, prefers observing from the sidelines. Top-tier rationality, meticulous and calm, skilled at dismantling opponent strategies. Low positivity, introverted and cold. Talent focused on extremely high court vision and洞察力. Restrained wildness, only showing cunning plays at key moments. Reserved confidence in own judgment. Precise serving, excellent stability. Soft, stable receiving with minimal errors. Extremely high passing skill, top-tier tactical orchestrator."
+  },
+  "SAKUSA": {
+    "code": "SAKUSA",
+    "cn": "佐久早圣臣",
+    "intro": "干净，是我打球的准则。",
+    "desc": "近乎全能的顶级王牌，实力天花板级，性格孤僻内敛、重度完美主义。进攻堪称顶尖水准，扣球旋转诡异、线路无解，强攻压制力拉满；领导偏弱，不善言辞、不愿主动带队，没有带动氛围、统领全队的意愿，只靠硬实力默默做支柱，不做精神领袖式统筹。理性极强，行事谨慎克制，赛场从不冲动冒进，先研判局势再出手，思虑极度周全；阳光特质很低，性格孤僻慢热、不喜人群交际，日常清冷寡言、距离感很强，几乎没有外放的阳光亲和力。天赋满格顶尖，攻防技术、身体条件、球商全维度天花板；野性藏在克制之下，平日收敛锋芒，遇上强敌才会迸发好胜野性与赛场爆发力；自信高傲且自持，清楚自身绝对实力，不刻意造势，骨子里自带强者底气。发球旋转诡异、落点精准，ACE能力顶级，是强有力的得分武器；一传稳到极致，防守抗压能力极强，能硬接各类强力来球；传球功底扎实全能，攻防转换衔接流畅，虽不以传球为核心强项，但完全够用且水准上乘。",
+    "descEn": "Near-perfect top ace, ceiling-level strength, introverted with severe perfectionism. Top-tier spiking with mysterious rotation and impossible angles. Weak leadership, prefers silent pillar role over team inspiration. Extremely high rationality, always analyzes before acting. Very low positivity, aloof and distant. Maxed talent in all dimensions - technique, physical ability, court sense. Hidden wildness restrained until facing strong opponents. Proud, self-possessed confidence. Top-tier serving with eerie rotation and precise placement. Extremely stable receiving, can handle any powerful attack. Solid all-around passing, smooth offensive-defensive transitions."
   }
 };
     // 人格类型图片映射：存储各角色的图片路径
@@ -1392,7 +1478,10 @@
   "DAICHI": "./image/DAICHI.jpg",
   "YAMAGUCHI": "./image/YAMAGUCHI.jpg",
   "AZUMA": "./image/AZUMA.jpg",
-  "KIYOMIZU": "./image/KIYOMIZU.jpg"
+  "KIYOMIZU": "./image/KIYOMIZU.jpg",
+  "GOSHIKI": "./image/GOSHIKI.jpg",
+  "SUNA": "./image/SUNA.jpg",
+  "SAKUSA": "./image/SAKUSA.jpg"
 };
 
     // 正常人格类型：定义各角色的分数向量
@@ -1410,7 +1499,7 @@
   { code: "USHIJIMA",   vector: [12, 7,  9,  6,  12, 10, 10, 11, 10, 9]  },
   { code: "TENDO",      vector: [10, 5,  5,  8,  10, 12, 10, 8,  8,  8]  },
   { code: "HOSHI",      vector: [12, 8,  10, 6,  8,  10, 12, 10, 10, 9]  },
-  { code: "MIYAATSU",   vector: [10, 6,  12, 6,  10, 6,  10, 9,  12, 10] },
+  { code: "MIYAATSU",   vector: [8,  4,  11, 4,  7,  5,  8,  7,  10, 8]  },
   { code: "MIYASATSU",  vector: [10, 12, 12, 8,  12, 10, 12, 12, 10, 12] },
   { code: "BOKUTO",     vector: [12, 8,  4,  12, 10, 10, 12, 10, 8,  8]  },
   { code: "AKAASHI",    vector: [6,  8,  12, 8,  9,  4,  10, 9,  10, 10] },
@@ -1418,7 +1507,10 @@
   { code: "DAICHI",     vector: [8,  10, 9,  10, 6,  8,  10, 8,  10, 8]  },
   { code: "YAMAGUCHI",  vector: [6,  3,  8,  8,  6,  4,  6,  10, 6,  6]  },
   { code: "AZUMA",      vector: [11, 3,  7,  6,  9,  6,  6,  10, 10, 8]  },
-  { code: "KIYOMIZU",   vector: [3,  6,  7,  8,  5,  3,  6,  5,  5,  3]  }
+  { code: "KIYOMIZU",   vector: [3,  6,  7,  8,  5,  3,  6,  5,  5,  3]  },
+  { code: "GOSHIKI",    vector: [11, 10, 6,  11, 11, 12, 11, 10, 7,  6]  },
+  { code: "SUNA",       vector: [9,  9,  12, 5,  11, 9,  9,  10, 11, 12] },
+  { code: "SAKUSA",     vector: [12, 10, 11, 4,  12, 10, 12, 12, 12, 11]  }
 ];
     // 维度解释：为每个维度的不同水平提供解释
     const DIM_EXPLANATIONS = {
@@ -1473,8 +1565,153 @@
     "H": "传球技术出色，能够根据场上情况灵活调整传球，为攻手创造最佳进攻机会。"
   }
 };
+
+const DIM_EXPLANATIONS_EN = {
+  "OFF": {
+    "L": "More inclined toward defense, believing stable defense is the foundation of victory, silently protecting the team.",
+    "M": "Balanced attack and defense, flexible strategies based on game situations.",
+    "H": "Prefers aggressive offense, pursuing strength: 'Strength is justice.' Always looking for scoring opportunities."
+  },
+  "LDR": {
+    "L": "Likes following their chosen leader, supporting them and executing tasks carefully.",
+    "M": "Sometimes takes leadership responsibility but prefers playing a supportive role.",
+    "H": "Takes initiative: 'Not just a genius, but a hard worker too.' Leading the team forward."
+  },
+  "RAT": {
+    "L": "Emotionally rich, easily affected by game situations, but full of passion.",
+    "M": "Balances emotion and reason, making reasonable judgments in most situations.",
+    "H": "Rational analysis: 'I am the king of the court!' Stays rational under pressure."
+  },
+  "POS": {
+    "L": "Introverted, prefers focusing on their own work, observing the world in their own way.",
+    "M": "Gentle personality, friendly with teammates, maintaining a positive attitude.",
+    "H": "Cheerful, sunny and positive, full of positive energy, infecting everyone around."
+  },
+  "TAL": {
+    "L": "No special talent in volleyball, needs more effort to improve.",
+    "M": "Has some volleyball talent, able to achieve good results through effort.",
+    "H": "Outstanding volleyball talent, quickly masters new skills, showing extraordinary ability."
+  },
+  "WLD": {
+    "L": "More restrained in games, focuses on team coordination.",
+    "M": "Shows competitive desire in games, has their own style.",
+    "H": "Shows strong wildness and competitive desire, eager to be the center of attention."
+  },
+  "CON": {
+    "L": "Lacks confidence, easily doubts themselves, needs encouragement and support.",
+    "M": "Has some confidence, can perform well in familiar situations but may hesitate under pressure.",
+    "H": "Confident: 'I am the strongest!' Believes in their abilities even facing difficulties."
+  },
+  "SRV": {
+    "L": "Average serving technique, lacks practice, may make frequent mistakes.",
+    "M": "Stable serving, can deliver threatening balls but lacks variety.",
+    "H": "Excellent serving, various types of serves, putting great pressure on opponents."
+  },
+  "RC": {
+    "L": "Poor passing technique, prone to errors, putting pressure on setters.",
+    "M": "Stable passing, can receive most serves but may struggle with powerful serves.",
+    "H": "Excellent passing, reliably receives various serves, a reliable team asset."
+  },
+  "PAS": {
+    "L": "Average passing, may sometimes pass inaccurately.",
+    "M": "Stable passing, delivers comfortable balls to attackers but lacks variety.",
+    "H": "Excellent passing, flexibly adjusts passes to create optimal scoring opportunities."
+  }
+};
     // 维度顺序：定义计算结果时的维度顺序
     const dimensionOrder = ['OFF','LDR','RAT','POS','TAL','WLD','CON','SRV','RC','PAS'];
+
+    // 首页文本内容
+    const introTexts = {
+      zh: {
+        title: '排球少年 HQTI 人格测试',
+        subtitle: '测测你最像排球少年里的谁',
+        startBtn: '开始测试',
+        langHint: '请先选择语言',
+        authorTitle: '作者信息',
+        authorHint: '关注作者可及时收取最新版本通知，或者对相关内容进行反馈沟通！谢谢支持！作者是超活力排球少女！欢迎关注！后续也可能推出其他相关作品！嘻嘻',
+        authorName: '作者：明明天天',
+        authorDouyin: '抖音：明明天天（71460046204）',
+        authorRednote: '小红书：明明天天（919630201）',
+        authorBilibili: 'B站：明明天天呀（241427014）',
+        expandBtn: '展开',
+        collapseBtn: '收起',
+        backIntroBtn: '返回首页',
+        prevBtn: '上一题',
+        submitBtn: '提交并查看结果',
+        posterCaption: '你的排球少年人格',
+        resultModeKicker: '你的主类型',
+        matchBadge: '匹配度',
+        resultDescTitle: '该人格的简单解读',
+        dimTitle: '十维度评分',
+        funNoteTitle: '友情提示',
+        funNote: '本测试仅供娱乐，别拿它当成你球场的剧本。',
+        translateBtn: 'Translate',
+        restartBtn: '重新测试',
+        toTopBtn: '回到首页'
+      },
+      en: {
+        title: 'Haikyuu HQTI Personality Test',
+        subtitle: 'Find out which Haikyuu character you are most like',
+        startBtn: 'Start Test',
+        langHint: 'Please select a language first',
+        authorTitle: 'About Author',
+        authorHint: 'Follow the author for latest version updates and feedback! Thank you for your support! The author is a super energetic volleyball girl! Welcome to follow! More related works may come out later! Hehe',
+        authorName: 'Author: 明明天天',
+        authorDouyin: 'TikTok: 明明天天（71460046204）',
+        authorRednote: 'RedNote: 明明天天（919630201）',
+        authorBilibili: 'Bilibili: 明明天天呀（241427014）',
+        expandBtn: 'Expand',
+        collapseBtn: 'Collapse',
+        backIntroBtn: 'Back to Home',
+        prevBtn: 'Previous',
+        submitBtn: 'Submit & See Results',
+        posterCaption: 'Your Haikyuu Personality',
+        resultModeKicker: 'Your Main Type',
+        matchBadge: 'Match',
+        resultDescTitle: 'Character Overview',
+        dimTitle: 'Ten Dimensions Score',
+        funNoteTitle: 'Note',
+        funNote: 'This test is for entertainment only. Please do not take it too seriously.',
+        translateBtn: '中文',
+        restartBtn: 'Retake Test',
+        toTopBtn: 'Back to Home'
+      }
+    };
+
+    // 语言切换函数
+    function setLanguage(lang) {
+      app.isEnglish = (lang === 'en');
+      const t = introTexts[lang];
+      
+      document.getElementById('introTitle').textContent = t.title;
+      document.getElementById('introSubtitle').textContent = t.subtitle;
+      document.getElementById('startBtn').textContent = t.startBtn;
+      document.getElementById('langHint').textContent = t.langHint;
+      document.getElementById('authorTitle').textContent = t.authorTitle;
+      document.getElementById('authorHint').textContent = t.authorHint;
+      document.getElementById('authorName').textContent = t.authorName;
+      document.getElementById('authorDouyin').textContent = t.authorDouyin;
+      document.getElementById('authorRednote').textContent = t.authorRednote;
+      document.getElementById('authorBilibili').textContent = t.authorBilibili;
+      document.getElementById('authorToggle').textContent = t.expandBtn;
+      document.getElementById('backIntroBtn').textContent = t.backIntroBtn;
+      document.getElementById('prevBtn').textContent = t.prevBtn;
+      document.getElementById('submitBtn').textContent = t.submitBtn;
+      
+      document.getElementById('langZhBtn').classList.toggle('active', lang === 'zh');
+      document.getElementById('langEnBtn').classList.toggle('active', lang === 'en');
+    }
+
+    // 作者信息展开/收起
+    function toggleAuthorBox() {
+      const content = document.getElementById('authorContent');
+      const toggle = document.getElementById('authorToggle');
+      const t = app.isEnglish ? introTexts.en : introTexts.zh;
+      const isHidden = content.style.display === 'none';
+      content.style.display = isHidden ? 'block' : 'none';
+      toggle.textContent = isHidden ? t.collapseBtn : t.expandBtn;
+    }
 
     // 灯箱功能：点击图片放大查看和下载
     function openLightbox(img) {
@@ -1511,7 +1748,8 @@
       shuffledQuestions: [],  // 打乱后的问题列表
       answers: {},           // 用户回答
       previewMode: false,    // 是否预览模式
-      currentQuestionIndex: 0 // 当前问题索引
+      currentQuestionIndex: 0, // 当前问题索引
+      isEnglish: false       // 是否显示英文
     };
 
     // 屏幕元素：存储页面上的三个主要屏幕
@@ -1571,10 +1809,10 @@
         card.className = 'question';
         card.innerHTML = `
           <div class="question-meta">
-            <div class="badge">第 ${app.currentQuestionIndex + 1} 题</div>
+            <div class="badge">${app.isEnglish ? `Question ${app.currentQuestionIndex + 1}` : `第 ${app.currentQuestionIndex + 1} 题`}</div>
             <div>${getQuestionMetaLabel(q)}</div>
           </div>
-          <div class="question-title">${q.text}</div>
+          <div class="question-title">${app.isEnglish ? q.textEn : q.text}</div>
           <div class="options">
             ${q.options.map((opt, i) => {
               const code = ['A', 'B', 'C', 'D'][i] || String(i + 1);
@@ -1583,7 +1821,7 @@
                 <label class="option">
                   <input type="radio" name="${q.id}" value="${opt.value}" ${checked} />
                   <div class="option-code">${code}</div>
-                  <div>${opt.label}</div>
+                  <div>${app.isEnglish ? opt.labelEn : opt.label}</div>
                 </label>
               `;
             }).join('')}
@@ -1614,11 +1852,11 @@
       
       // 更新提交按钮文本
       if (app.currentQuestionIndex < totalQuestions - 1) {
-        submitBtn.textContent = '下一题';
-        testHint.textContent = '请选择答案后点击下一题继续';
+        submitBtn.textContent = app.isEnglish ? 'Next' : '下一题';
+        testHint.textContent = app.isEnglish ? 'Select an answer and click Next to continue' : '请选择答案后点击下一题继续';
       } else {
-        submitBtn.textContent = '提交';
-        testHint.textContent = '都做完了。现在可以把你的电子魂魄交给结果页审判。';
+        submitBtn.textContent = app.isEnglish ? 'Submit' : '提交';
+        testHint.textContent = app.isEnglish ? 'All done! Now hand over your digital soul to the result page for judgment.' : '都做完了。现在可以把你的电子魂魄交给结果页审判。';
       }
       
       // 只有当前题已回答才启用按钮
@@ -1710,6 +1948,7 @@
       let modeKicker = '你的排球少年人格';
       let badge = `匹配度 ${bestNormal.similarity}%`;
       let sub = '维度命中度较高，你非常像这位角色！';
+      let subEn = 'High dimension match, you are very similar to this character!';
       let special = false;
       let secondaryType = null;
 
@@ -1724,13 +1963,14 @@
         modeKicker,
         badge,
         sub,
+        subEn,
         special,
         secondaryType
       };
     }
 
     // 渲染维度列表
-    function renderDimList(result) {
+    function renderDimList(result, explanations = DIM_EXPLANATIONS) {
       const dimList = document.getElementById('dimList');
       // 定义每个维度的满分
       const maxScores = {
@@ -1749,8 +1989,8 @@
         const level = result.levels[dim];
         const score = result.rawScores[dim];
         const maxScore = maxScores[dim];
-        const dimName = dimensionMeta[dim].name;
-        const explanation = DIM_EXPLANATIONS[dim][level];
+        const dimName = app.isEnglish ? dimensionMeta[dim].name.replace(/[^\w\s]/g, '').replace(/\s*/g, '') : dimensionMeta[dim].name;
+        const explanation = explanations[dim][level];
         
         return `
           <div class="dim-item">
@@ -1815,7 +2055,22 @@
 
     // 事件监听器：绑定按钮点击事件
     document.getElementById('startBtn').addEventListener('click', () => startTest(false));
-    document.getElementById('backIntroBtn').addEventListener('click', () => showScreen('intro'));
+    document.getElementById('langZhBtn').addEventListener('click', () => {
+      setLanguage('zh');
+      document.getElementById('startBtn').disabled = false;
+      document.getElementById('langHint').style.display = 'none';
+    });
+    document.getElementById('langEnBtn').addEventListener('click', () => {
+      setLanguage('en');
+      document.getElementById('startBtn').disabled = false;
+      document.getElementById('langHint').style.display = 'none';
+    });
+    document.getElementById('backIntroBtn').addEventListener('click', () => {
+      showScreen('intro');
+      document.getElementById('startBtn').disabled = true;
+      document.getElementById('langHint').style.display = 'block';
+      setLanguage('zh');
+    });
     document.getElementById('prevBtn').addEventListener('click', () => {
       if (app.currentQuestionIndex > 0) {
         app.currentQuestionIndex--;
@@ -1833,8 +2088,41 @@
         renderResult();
       }
     });
-    document.getElementById('restartBtn').addEventListener('click', () => startTest(false));
-    document.getElementById('toTopBtn').addEventListener('click', () => showScreen('intro'));
+    document.getElementById('restartBtn').addEventListener('click', () => {
+      app.isEnglish = false;
+      startTest(false);
+    });
+    document.getElementById('toTopBtn').addEventListener('click', () => {
+      showScreen('intro');
+      document.getElementById('startBtn').disabled = true;
+      document.getElementById('langHint').style.display = 'block';
+      setLanguage('zh');
+    });
+    document.getElementById('translateBtn').addEventListener('click', () => {
+      app.isEnglish = !app.isEnglish;
+      const lang = app.isEnglish ? 'en' : 'zh';
+      const t = introTexts[lang];
+      const result = computeResult();
+      const type = result.finalType;
+      const explanations = app.isEnglish ? DIM_EXPLANATIONS_EN : DIM_EXPLANATIONS;
+      
+      document.getElementById('resultModeKicker').textContent = t.resultModeKicker;
+      document.getElementById('resultTypeName').textContent = app.isEnglish ? `${type.cn} (${type.code})` : `${type.code}（${type.cn}）`;
+      document.getElementById('matchBadge').textContent = app.isEnglish ? `${t.matchBadge}: ${result.badge.replace('匹配度 ','')}%` : result.badge;
+      document.getElementById('resultTypeSub').textContent = app.isEnglish ? result.subEn : result.sub;
+      document.getElementById('resultDesc').textContent = app.isEnglish ? (type.descEn || type.desc) : type.desc;
+      document.getElementById('posterCaption').textContent = t.posterCaption;
+      document.getElementById('resultDescTitle').textContent = t.resultDescTitle;
+      document.getElementById('dimTitle').textContent = t.dimTitle;
+      document.getElementById('funNoteTitle').textContent = t.funNoteTitle;
+      document.getElementById('funNote').textContent = t.funNote;
+      document.getElementById('translateBtn').textContent = t.translateBtn;
+      document.getElementById('restartBtn').textContent = t.restartBtn;
+      document.getElementById('toTopBtn').textContent = t.toTopBtn;
+      document.getElementById('backIntroBtn').textContent = t.backIntroBtn;
+      
+      renderDimList(result, explanations);
+    });
   </script>
 
 </body>
